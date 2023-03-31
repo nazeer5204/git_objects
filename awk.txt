@@ -1,0 +1,138 @@
+[root@host-1-9 ~]# cat data.txt
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-9 ~]# awk '{print $2}' data.txt---to print the 2nd column
+Name
+pol
+Bont
+Loki
+Hina
+[root@host-1-9 ~]# awk '{print $2,$4}'  data.txt--to print the 2nd&4th column
+Name Country
+pol India
+Bont Belgium
+Loki Germany
+Hina India
+[root@host-1-9 ~]# awk '{print $NF}' data.txt--to print the last column,$NF is used to print last column
+Country
+India
+Belgium
+Germany
+India
+[root@host-1-9 ~]# ls -ltr|awk '{print $NF}'
+24
+anaconda-ks.cfg
+initial-setup-ks.cfg
+cars.txt
+indianusers.txt
+ex_file
+data.txt
+posix
+[root@host-1-9 ~]# cat -n cars.txt
+     1  TOYOTA INNOVA
+     2  HYUNDAI CRETA
+     3  MAHENDRA SCORPIO
+     4  MAHENDRA XUV
+     5  MARUTI SUZUKI
+[root@host-1-9 ~]# awk '{print NR}' cars.txt---to print the row numbers
+1
+2
+3
+4
+5
+[root@host-1-9 ~]# awk 'print NR $0' cars.txt
+awk: cmd. line:1: print NR $0
+awk: cmd. line:1: ^ syntax error
+[root@host-1-9 ~]# awk '{print NR $0}' cars.txt---to print the row numbers and columns
+1TOYOTA INNOVA
+2HYUNDAI CRETA
+3MAHENDRA SCORPIO
+4MAHENDRA XUV
+5MARUTI SUZUKI
+[root@host-1-9 ~]# awk '{print NR,$0}' cars.txt---we can also specify delimiters 
+1 TOYOTA INNOVA
+2 HYUNDAI CRETA
+3 MAHENDRA SCORPIO
+4 MAHENDRA XUV
+5 MARUTI SUZUKI
+[root@host-1-9 ~]# awk '{print NR ": " $0 }' cars.txt---we can also specify delimiters  
+1: TOYOTA INNOVA
+2: HYUNDAI CRETA
+3: MAHENDRA SCORPIO
+4: MAHENDRA XUV
+5: MARUTI SUZUKI
+[root@host-1-9 ~]# awk '{print NR "  " $0 }' cars.txt
+1  TOYOTA INNOVA
+2  HYUNDAI CRETA
+3  MAHENDRA SCORPIO
+4  MAHENDRA XUV
+5  MARUTI SUZUKI
+[root@host-1-9 ~]# awk '{print NR "@ " $0 }' cars.txt---we can also specify delimiters 
+1@ TOYOTA INNOVA
+2@ HYUNDAI CRETA
+3@ MAHENDRA SCORPIO
+4@ MAHENDRA XUV
+5@ MARUTI SUZUKI
+[root@host-1-9 ~]# vi employee.csv
+[root@host-1-9 ~]# cat employy.csv
+cat: employy.csv: No such file or directory
+[root@host-1-9 ~]# cat employee.csv
+id,first_name,last_name,email,coutry
+101,Nazeer,Shaik,shaiknazeeruddin001@gmail.com,India
+102,Zameer,Shaik,shaikzameeruddin001@gmail.com,India
+
+
+
+[root@host-1-9 ~]# vi employee.csv
+[root@host-1-9 ~]# cat employee.csv
+id,first_name,last_name,email,coutry
+101,Nazeer,Shaik,shaiknazeeruddin001@gmail.com,India
+102,Zameer,Shaik,shaikzameeruddin001@gmail.com,India
+[root@host-1-9 ~]# awk -F, '{print $4}' employee.csv--to print specific field in csv file,-F is used to select specific field and with the delimiters
+email
+shaiknazeeruddin001@gmail.com
+shaikzameeruddin001@gmail.com
+[root@host-1-9 ~]# awk -F, '{print $5}' employee.csv
+coutry
+India
+India
+[root@host-1-9 ~]# vi employee.csv
+[root@host-1-9 ~]# awk '{if($3>40000) print $0}' data.txt---we return the data conditionally
+ID Name Salary Country
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+[root@host-1-9 ~]# awk '{if($2=="pol"{$3=80000}print $0}' data.txt
+awk: cmd. line:1:              ^ syntax error
+[root@host-1-9 ~]# awk '{if($2=="Pol"){$3=80000}print $0}' data.txt---we can return the data conditionally
+awk: cmd. line:1: {if($2=="pol"{$3=80000}print $0}
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-9 ~]# awk '{if($2=="pol"){$3=80000}print $0}' data.txt
+ID Name Salary Country
+1 pol 80000 India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-9 ~]# awk '/India/ {print $0}' employee.csv---to print the data which is india,// is used to search
+101,Nazeer,Shaik,shaiknazeeruddin001@gmail.com,India
+[root@host-1-9 ~]# awk 'NR=="3" {print $0}' data.txt
+2  Bont 45000  Belgium
+[root@host-1-9 ~]# awk 'NR=="2",NR=="5" {print $0}' data.txt---to print the data between specified row numbers 
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-9 ~]# vi data.txt
+[root@host-1-9 ~]# awk 'NF==0 {print NR}' data.txt--to print the line numbers having empty spaces
+2
+3
+[root@host-1-9 ~]# vi data.txt
+[root@host-1-9 ~]# awk 'END {print NR}' data.txt--to print the no.of lines
+
+
