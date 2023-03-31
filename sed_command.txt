@@ -1,0 +1,406 @@
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# sed '2p' data.txt
+ID Name Salary Country
+1  pol  25000  India
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# cat data.txt
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# sed -n '2p' data.txt-------to return 2nd line from the file,p mean print
+1  pol  25000  India
+[root@host-1-33 ~]# sed -n '$p' data.txt-------to return last line from the file,$ returns last line 
+4  Hina 35000  India
+[root@host-1-33 ~]# sed -n '3,5p' data.txt-----to retrn the lines between the range 3 to 5
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# sed -n '2,5p' data.txt-----to return the lines between the range 2 to 5
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# sed -n '/India/p' data.txt---to return the data who belong to india,// searches the pattern what we mentioned inside it
+1  pol  25000  India
+4  Hina 35000  India
+[root@host-1-33 ~]# sed -n '/25000/p' data.txt---to return the salary who is having 25000,// searches the pattern what we mentioned inside it
+1  pol  25000  India
+[root@host-1-33 ~]# sed -n -e '2p' -e '5p' data.txt--to return the specifed lines we use multiple expressions,-e is used when we specify multiple expressions
+1  pol  25000  India
+4  Hina 35000  India
+[root@host-1-33 ~]# sed -n -e '/India/' -e '/Germany/' data.txt---here we are searching the data belongs to india and germany,-e means expression and // searches the pattern what we mentioned inside it
+sed: -e expression #1, char 7: missing command
+[root@host-1-33 ~]# sed -n -e -i '/india/p' -e '/germany/p' data.txt
+sed: -e expression #1, char 1: unknown command: `-'
+[root@host-1-33 ~]# sed -n -e '/India/p' -e '/Germany/p' data.txt
+1  pol  25000  India
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# sed -n '2,+2p' data.txt---it returns the next two lines after the 2nd line,+np returns the n lines after the specified line
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+[root@host-1-33 ~]# sed -n '2~2p' data.txt---it returns the lines by having the difference 2,~np return the lines with n difference
+1  pol  25000  India
+3  Loki 55000  Germany
+[root@host-1-33 ~]# sed -n '1~1p' data.txt
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# vi ex_file
+[root@host-1-33 ~]# cat ex_file
+1d
+3d
+5d
+
+[root@host-1-33 ~]# sed -n -f ex_file data.txt---it takes the command from the file,-f means file 
+[root@host-1-33 ~]# cat data.txt
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# rm -rf ex_file
+[root@host-1-33 ~]# ls
+anaconda-ks.cfg  cars.txt  data.txt  initial-setup-ks.cfg
+[root@host-1-33 ~]# cat > ex_file
+1p
+2p
+3p
+[root@host-1-33 ~]# cat ex_file
+1p
+2p
+3p
+[root@host-1-33 ~]# sed -n -f ex_file data.txt---it takes the command from the file,-f means file 
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+[root@host-1-33 ~]# sed  's/pol/paul/g' data.txt---here we are substituting the pol by paul,s means substitue,g means global
+ID Name Salary Country
+1  paul  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# sed '2 s/India/USA/' data.txt--here we specified substitute the 2 line india with usa
+ID Name Salary Country
+1  pol  25000  USA
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# sed '2! s/India/USA/' data.txt--here we are specifing substitute the line india with usa except 2nd line,! means except
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  USA
+[root@host-1-33 ~]# sed -i '2! s/India/USA/' data.txt---if the specified -i then it reflects in the file
+[root@host-1-33 ~]# cat data.txt
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  USA
+[root@host-1-33 ~]# sed '/pol/ s/India/USA/' data.txt--here we are specifing that substitute the india with usa whos names is pol
+ID Name Salary Country
+1  pol  25000  USA
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  USA
+[root@host-1-33 ~]# sed '/pol/ s/25000/250000/g' data.txt---here we are specifing that substitute the salary 25000 with 250000 whos names is pol
+ID Name Salary Country
+1  pol  250000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  USA
+[root@host-1-33 ~]# sed '1d' data.txt---here we are deleting the 1st line,d means delete
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  USA
+[root@host-1-33 ~]# cat data.txt
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  USA
+[root@host-1-33 ~]# sed '2,4d' data.txt---here we are deleting the lines between the range 2 to 4
+ID Name Salary Country
+4  Hina 35000  USA
+[root@host-1-33 ~]# sed '/Belgium/d' data.txt-- here we are deleting the data whose country is belgium
+ID Name Salary Country
+1  pol  25000  India
+3  Loki 55000  Germany
+4  Hina 35000  USA
+[root@host-1-33 ~]# vi data.txt
+[root@host-1-33 ~]# cat data.txt
+ID Name Salary Country
+1  pol  25000  India
+
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  USA
+[root@host-1-33 ~]# sed '/^$/d' data.txt---here we are deleting the empty lines,/^$/ searches for empty lines
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  USA
+[root@host-1-33 ~]# sed -i '/^$/d' data.txt
+[root@host-1-33 ~]# cat data.txt
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  USA
+[root@host-1-33 ~]# sed -i 's/USA/INDIA/G' data.txt
+sed: -e expression #1, char 13: unknown option to `s'
+[root@host-1-33 ~]# sed -i 's/USA/India/' data.txt
+[root@host-1-33 ~]# cat data.txt
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# sed '/India/ w indianusers.txt' data.txt---here we are writing the data whose country is india,w means write 
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# ls
+anaconda-ks.cfg  cars.txt  data.txt  ex_file  indianusers.txt  initial-setup-ks.cfg
+[root@host-1-33 ~]# cat indianusers.txt
+1  pol  25000  India
+4  Hina 35000  India
+[root@host-1-33 ~]# sed '3 a nazeer 50000 India' data.txt---here we are appending the data after the 3rd line
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+nazeer 50000 India
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# cat data.txt
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# sed '3 a 5 Nazeer India' data.txt
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+5 Nazeer India
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-33 ~]# sed '3 a 5 Nazeer 50000 India' data.txt
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+5 Nazeer 50000 India
+3  Loki 55000  Germany
+4  Hina 35000  India
+
+[root@host-1-153 ~]# cat data.txt
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-153 ~]# sed '3 c hello user' data.txt----here we are changing the 3rd line,c means changing or editing the existing line
+ID Name Salary Country
+1  pol  25000  India
+hello user
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-153 ~]# sed '3 c 2  bont 45000 Belgum' data.txt----here we are changing the 3rd line,c means changing or editing the existing line
+ID Name Salary Country
+1  pol  25000  India
+2  bont 45000 Belgum
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-153 ~]# sed '1 i hello user' data.txt----here we are entering the data before the 1st line,i is used to insert before the 1st line
+hello user
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-153 ~]# sed -n 'l' data.txt---here we are returning the special characters,by using l we can see the hidden characters and spaces
+ID Name Salary Country$
+1  pol  25000  India$
+2  Bont 45000  Belgium$
+3  Loki 55000  Germany$
+4  Hina 35000  India$
+[root@host-1-153 ~]# vi data.txt
+[root@host-1-153 ~]# sed -n 'l' data.txt---here we are returning the special characters,by using l we can see the hidden characters and spaces
+ID Name Salary Country$
+1  pol  25000  India$
+2  Bont 45000  Belgium$
+3  Loki 55000  Germany$
+4  Hina 35000  India $
+[root@host-1-153 ~]# sed -n 'l -10' data.txt
+sed: -e expression #1, char 3: extra characters after command
+[root@host-1-153 ~]# sed -n 'l 10' data.txt---here we are wraping the data 
+ID Name S\
+alary Cou\
+ntry$
+1  pol  2\
+5000  Ind\
+ia$
+2  Bont 4\
+5000  Bel\
+gium$
+3  Loki 5\
+5000  Ger\
+many$
+4  Hina 3\
+5000  Ind\
+ia $
+[root@host-1-153 ~]# cat cars.txt
+TOYOTA INNOVA
+HYUNDAI CRETA
+MAHENDRA SCORPIO
+MAHENDRA XUV
+MARUTI SUZUKI
+[root@host-1-153 ~]# sed '3 r cars.txt' data.txt---here we are writing the other file data after the 3rd line
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+TOYOTA INNOVA
+HYUNDAI CRETA
+MAHENDRA SCORPIO
+MAHENDRA XUV
+MARUTI SUZUKI
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-153 ~]# sed '/India/ q' data.txt---if we want to stop the searching after the first occurence,q is used to stop after the first occurence
+ID Name Salary Country
+1  pol  25000  India
+[root@host-1-153 ~]# date
+Sat 18 Mar 08:29:44 GMT 2023
+[root@host-1-153 ~]# sed '2 e date' data.txt---here we are execting the command in the 2nd line
+ID Name Salary Country
+Sat 18 Mar 08:30:22 GMT 2023
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-153 ~]# sed '1 l e date' data.txt
+sed: -e expression #1, char 5: extra characters after command
+[root@host-1-153 ~]# sed '1 e date' data.txt---here we are execting the command in the 1st line
+Sat 18 Mar 08:31:11 GMT 2023
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-153 ~]# sed '1 e pwd' data.txt---here we are execting the command in the 1st line
+/root
+ID Name Salary Country
+1  pol  25000  India
+2  Bont 45000  Belgium
+3  Loki 55000  Germany
+4  Hina 35000  India
+[root@host-1-153 ~]# sed '=' data.txt---if the want to see the line number,= is used
+1
+ID Name Salary Country
+2
+1  pol  25000  India
+3
+2  Bont 45000  Belgium
+4
+3  Loki 55000  Germany
+5
+4  Hina 35000  India
+[root@host-1-153 ~]# sed -n '/^I/p' cars.txt---if we want to print the data starting with first letter 'I'
+[root@host-1-153 ~]# sed -n '/^T/p' cars.txt---if we want to print the data starting with first letter 'T'
+TOYOTA INNOVA
+[root@host-1-153 ~]# sed -n '/a$/p' cars.txt------if we want to print the data last letter with 'I'
+[root@host-1-153 ~]# sed -n '/A$/p' cars.txt------if we want to print the data last letter with 'I'
+TOYOTA INNOVA
+HYUNDAI CRETA
+[root@host-1-153 ~]# sed -n '/[MI]/p' cars.txt---------if we want to print the data first letter with M OR I
+TOYOTA INNOVA
+HYUNDAI CRETA
+MAHENDRA SCORPIO
+MAHENDRA XUV
+MARUTI SUZUKI
+[root@host-1-153 ~]# cat cars.txt
+TOYOTA INNOVA
+HYUNDAI CRETA
+MAHENDRA SCORPIO
+MAHENDRA XUV
+MARUTI SUZUKI
+[root@host-1-153 ~]# sed -n '/[HT]/p' cars.txt----if we want to print the data first letter with H OR T
+TOYOTA INNOVA
+HYUNDAI CRETA
+MAHENDRA SCORPIO
+MAHENDRA XUV
+MARUTI SUZUKI
+[root@host-1-153 ~]# sed -n '/[A-T]/p' cars.txt------------if we want to print the data between A TO T
+TOYOTA INNOVA
+HYUNDAI CRETA
+MAHENDRA SCORPIO
+MAHENDRA XUV
+MARUTI SUZUKI
+[root@host-1-153 ~]# ls -ltr *.txt
+-rw-r--r--. 1 root root  72 Mar 13 15:41 cars.txt
+-rw-r--r--. 1 root root  42 Mar 17 19:01 indianusers.txt
+-rw-r--r--. 1 root root 112 Mar 18 08:19 data.txt
+[root@host-1-153 ~]# ls -ltr c*
+-rw-r--r--. 1 root root 72 Mar 13 15:41 cars.txt
+[root@host-1-153 ~]# vi posix
+[root@host-1-153 ~]# cat posix
+HELLO
+WORLD
+like
+subscribe
+1234
+890
+ABCD1234
+Hello World
+Hello, World!
+[root@host-1-153 ~]# sed -n '[[:digit:]]p' posix---if we want to return the data having numbers
+sed: -e expression #1, char 1: unknown command: `['
+[root@host-1-153 ~]# sed -n '/[[:digit:]]/p' posix--if we want to return the data having numbers
+1234
+890
+ABCD1234
+[root@host-1-153 ~]# sed -n '/[[:upper:]]/p' posix--if we want to return the data having UPPER CASE LETTERS
+HELLO
+WORLD
+ABCD1234
+Hello World
+Hello, World!
+[root@host-1-153 ~]# sed -n '/[[:lower:]]/p' posix--if we want to return the data having LOWER CASE LETTERS
+like
+subscribe
+Hello World
+Hello, World!
+[root@host-1-153 ~]# sed -n '/[[:space:]]/p' posix---if we want to return the data having SPACES
+Hello World
+Hello, World!
+[root@host-1-153 ~]# sed -n '/[[:punc:]]/p' posix
+sed: -e expression #1, char 12: Invalid character class name
+[root@host-1-153 ~]# sed -n '/[[:punct:]]/p' posix--if we want to return the data having PUNCTUATIONS
+Hello, World!
+[root@host-1-153 ~]# sed -n '/[[:alpha:]]/p' posix----if we want to return the data having only alphabets
+HELLO
+WORLD
+like
+subscribe
+ABCD1234
+Hello World
+Hello, World!
+
