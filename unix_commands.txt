@@ -1,0 +1,881 @@
+directory commands:
+~~~~~~~~~~~~~~~~~~~
+1.pwd----present working directory
+2.mkdir----make directory
+eg:mkdir first
+3.mkdir folder1 folder2 folder3 (we can create multiple folders at a time)
+4.mkdir -p -----to create sub-directories
+eg:mkdir -p parent/child/grand_child (here we created parent directory and sub-directories in it)
+5.cd---change directory 
+eg:cd parent (this will take to parent directory) 
+   cd parent/child/grand_child (we can go from parent directory to grand_child directory)
+6.cd .. ----takes one step backward
+7.cd /---this will take to the root directory directly 
+8.rmdir---deletes the empty directory only
+eg:rmdir folder1
+eg:rmdir folder1 folder2(at a time we can remove multiple directories) 
+9.rm -r (recursive remove)---it can delete folders with files
+10.server_name: hostname
+11.ip_address: hostname-i
+12.user: whoami
+
+
+
+file handling commands:
+~~~~~~~~~~~~~~~~~~~~~~
+1.cat command:
+  ~~~~~~~~~~~
+Cat(concatenate) command is very frequently used in Linux. It reads data from the file and gives their content as output. 
+It helps us to create, view, concatenate files. So let us see some frequently used cat commands. 
+a) To view a single file 
+
+Command: 
+$cat filename
+
+Output: 
+It will show content of given filename
+
+b) To view multiple files
+ 
+Command: 
+$cat file1 file2
+Output:
+This will show the content of file1 and file2. 
+
+c) To view contents of a file preceding with line numbers. 
+Command: 
+$cat -n filename
+Output:
+It will show content with line number 
+
+d)Create a file 
+Command: 
+$ cat > newfile
+Output:
+Will create a file named newfile
+
+e)Copy the contents of one file to another file. 
+Command: 
+$cat [filename-whose-contents-is-to-be-copied] > [destination-filename]
+Output: 
+The content will be copied in destination file
+
+f) Cat command can suppress repeated empty lines in output 
+Command: 
+$cat -s geeks.txt
+Output: 
+Will suppress repeated empty lines in output
+
+g)Cat command can append the contents of one file to the end of another file. 
+Command: 
+$cat file1 >> file2
+Output: 
+Will append the contents of one file to the end of another file
+
+h)Cat command can display content in reverse order using tac command. 
+Command: 
+$tac filename
+Output 
+Will display content in reverse order 
+
+i)Cat command if the file has a lot of content and can’t fit in the terminal. 
+Command: 
+$cat "filename" | more
+Output:
+Will show that much content, which could fit in terminal and will ask to show more.
+
+j)Cat command to merge the contents of multiple files. 
+Command: 
+$cat "filename1" "filename2" "filename3" > "merged_filename"
+Output: 
+Will merge the contents of file in respective order and will insert that content in "merged_filename".
+
+k)Cat command to display the content of all text files in the folder. 
+Command: 
+$cat *.txt
+Output: 
+Will show the content of all text files present in the folder.
+
+l)Cat command to write in an already existing file. 
+
+Command :
+$cat >> geeks.txt
+The newly added text.
+Output:
+Will append the text "The newly added text." to the end of the file.
+
+2.touch command:
+The touch command is a standard command used in UNIX/Linux operating system which is used to create, change and modify timestamps of a file. 
+Basically, there are two different commands to create a file in the Linux system.
+
+cat command: It is used to create the file with content.
+touch command: It is used to create a file without any content. The file created using touch command is empty. 
+This command can be used when the user doesn’t have data to store at the time of file creation.
+
+a)Touch command Syntax to create a new file: You can create a single file at a time using touch command.
+
+Syntax:
+touch file_name
+
+b)Touch command to create multiple files: Touch command can be used to create the multiple numbers of files at the same time. These files would be empty while creation.
+
+Syntax:
+touch File1_name File2_name File3_name 
+
+c)touch -c : This command is used to check whether a file is created or not. If not created then don’t create it. This command avoids creating files.
+
+Syntax:
+touch -c fileName
+4.ls---just list the files and folders
+#.ls -l ---command to list the contents of the directory in a table format with columns including
+content permissions
+number of links to the content
+owner of the content
+group owner of the content
+size of the content in bytes
+last modified date / time of the content
+file or directory name
+#.ls -ltr --displays the permissions,created date and time
+#.ls -a  ---command to list files or directories including hidden files or directories. In Linux, anything that begins with a . is considered a hidden file
+#.ls -al ---command to list files or directories in a table format with extra information including hidden files or directories
+#.ls -t ---command to list files or directories and sort by last modified date in descending order (biggest to smallest).
+You can also add a -r flag to reverse the sorting order like so ls -tr
+#.ls -S ---(the S is uppercase) command to list files or directories and sort by size in descending order (biggest to smallest).
+You can also add a -r flag to reverse the sorting order like so: ls -Sr
+#.ls > output.txt command to print the output of the preceding command into an output.txt file. 
+You can use any of the flags discussed before like -la — the key point here is that the result will be outputted into a file and not logged to the command line.
+#.ls -latr ---displays the folders,files,hidden files,permissions,created date and time
+#.ls -F --displays the folders
+#.ls -r --reverse order
+5.cp command: 
+cp stands for a copy. This command is used to copy files or groups of files or directories. 
+It creates an exact image of a file on a disk with a different file name. cp command requires at least two filenames in its arguments. 
+
+Syntax:
+
+cp [OPTION] Source Destination
+cp [OPTION] Source Directory
+cp [OPTION] Source-1 Source-2 Source-3 Source-n Directory
+
+eg:cp source.filename target.filename
+6.mv --move the file and to rename the file
+eg:mv file.txt file1.txt
+7.head --it displays first few lines of the file
+syntax:
+head [OPTION]... [FILE]...
+
+head -n: displays lines
+eg:head -n 5 state.txt
+
+head -c: displays bytes or -c num: Prints the first ‘num’ bytes from the file specified. Newline count as a single character, so if head prints out a newline, 
+it will count it as a byte. num is mandatory to be specified in command otherwise displays an error. 
+eg:
+~~ 
+$ head -c 6 state.txt
+Andhra
+
+head -q: quiet(if we are having two or three files and if we dont want to display the filenames) or -q: It is used if more than 1 file is given. 
+Because of this command, data from each file is not precedes by its file name. 
+
+Without using -q option
+$ head state.txt capital.txt
+==> state.txt <==
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+Goa
+Gujarat
+Haryana
+Himachal Pradesh
+Jammu and Kashmir
+
+==> capital.txt <==
+Hyderabad
+Itanagar
+Dispur
+Patna
+Raipur
+Panaji
+Gandhinagar
+Chandigarh
+Shimla
+Srinagar
+
+With using -q option
+$ head -q  state.txt capital.txt
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+Goa
+Gujarat
+Haryana
+Himachal Pradesh
+Jammu and Kashmir
+Hyderabad
+Itanagar
+Dispur
+Patna
+Raipur
+Panaji
+Gandhinagar
+Chandigarh
+Shimla
+Srinagar
+
+head -v: verbose(displays the file name) or By using this option, data from the specified file is always preceded by its file name. 
+eg:
+~~
+head -v state.txt
+==> state.txt <==
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+Goa
+Gujarat
+Haryana
+Himachal Pradesh
+Jammu and Kashmir
+
+13.tail ---displays last few lines of the file
+14.WC command:
+   ~~~~~~~~~~
+It is used to find out number of lines, word count, byte and characters count in the files specified in the file arguments.
+By default it displays four-columnar output.
+First column shows number of lines present in a file specified, second column shows number of words present in the file, 
+third column shows number of characters present in file and fourth column itself is the file name which are given as argument.
+Syntax:
+
+wc [OPTION]... [FILE]...
+eg:wc customer.txt
+
+Passing only one file name in the argument.
+
+$ wc state.txt
+ 5  7 58 state.txt
+       OR
+$ wc capital.txt
+ 5  5 39 capital.txt
+Passing more than one file name in the argument.
+
+$ wc state.txt capital.txt
+  5   7  58 state.txt
+  5   5  39 capital.txt
+ 10  12  97 total
+
+Note : When more than file name is specified in argument then command will display four-columnar output for all individual files plus one extra row displaying total 
+number of lines, words and characters of all the files specified in argument, followed by keyword total. Options: 1. -l: This option prints the number of lines present in a 
+file. With this option wc command displays two-columnar output, 1st column shows number of lines present in a file and 2nd itself represent the file name.
+15.wc -l (displays only no of lines)
+16.wc -w (displays only no of words)
+17.wc -c (displays only no of bytes)
+18.SORT command is used to sort a file, arranging the records in a particular order. 
+   ~~~~~~~~~~~~
+By default, the sort command sorts file assuming the contents are ASCII. Using options in the sort command can also be used to sort numerically. 
+The sort command follows these features as stated below:  
+Lines starting with a number will appear before lines starting with a letter.
+Lines starting with a letter that appears earlier in the alphabet will appear before lines starting with a letter that appears later in the alphabet.
+Lines starting with a uppercase letter will appear before lines starting with the same letter in lowercase.
+Syntax : 
+$ sort filename.txt
+
+1. -o Option: Unix also provides us with special facilities like if you want to write the output to a new file, output.txt, 
+redirects the output like this or you can also use the built-in sort option -o, which allows you to specify an output file. 
+
+Using the -o option is functionally the same as redirecting the output to a file. 
+
+Note: Neither one has an advantage over the other. 
+
+Example: The input file is the same as mentioned above. 
+
+Syntax:
+
+$ sort inputfile.txt > filename.txt
+$ sort -o filename.txt inputfile.txt
+
+2. -r Option: Sorting In Reverse Order: You can perform a reverse-order sort using the -r flag. the -r flag is an option of the sort command which sorts the input file in reverse order i.e. descending order by default. 
+
+Example: The input file is the same as mentioned above. 
+
+Syntax : 
+
+$ sort -r inputfile.txt
+Command :
+$ sort -r file.txt
+Output :
+satish
+rajan
+naveen 
+harsh
+divyam
+chitransh
+abhishek
+
+3. -n Option: To sort a file numerically used –n option. -n option is also predefined in Unix as the above options are. 
+This option is used to sort the file with numeric data present inside. 
+
+Example : 
+
+Let us consider a file with numbers: 
+
+Command :
+$ cat > file1.txt
+50
+39
+15
+89
+200
+Syntax:
+
+$ sort -n filename.txt
+Command :
+$ sort -n file1.txt
+Output :
+15
+39
+50
+89
+200
+4. -nr option: To sort a file with numeric data in reverse order we can use the combination of two options as stated below. 
+
+Example: The numeric file is the same as above. 
+
+Syntax : 
+
+$ sort -nr filename.txt
+5. -k Option: Unix provides the feature of sorting a table on the basis of any column number by using -k option. 
+
+Use the -k option to sort on a certain column. For example, use “-k 2” to sort on the second column. 
+
+Syntax :
+$ sort -k filename.txt
+
+Command :
+$ sort -k 2n employee.txt
+guard    3000
+clerk    4000
+peon     4500
+manager  5000
+employee 6000
+director 9000
+
+6. -c option: This option is used to check if the file given is already sorted or not & checks if a file is already sorted pass the -c option to sort. 
+This will write to standard output if there are lines that are out of order. The sort tool can be used to understand if this file is sorted and which lines are out of order 
+
+Example : 
+
+Suppose a file exists with a list of cars called cars.txt. 
+
+Audi
+Cadillac
+BMW
+Dodge
+Syntax :
+
+$ sort -c filename.txt
+Command :
+$ sort -c cars.txt
+Output :
+sort: cars.txt:3: disorder: BMW
+ Note : If there is no output then the file is considered to be already sorted 
+7. -u option: To sort and remove duplicates pass the -u option to sort. This will write a sorted list to standard output and remove duplicates. 
+This option is helpful as the duplicates being removed give us a redundant file. 
+
+Example: Suppose a file exists with a list of cars called cars.txt. 
+Audi
+BMW
+Cadillac
+BMW
+Dodge
+Syntax :
+
+$ sort -u filename.txt
+Command :
+$ sort -u cars.txt
+$ cat cars.txt
+Output :
+Audi
+BMW
+Cadillac
+Dodge
+
+8. -M Option: To sort by month pass the -M option to sort. This will write a sorted list to standard output ordered by month name. 
+
+Example: 
+
+Suppose the following file exists and is saved as months.txt 
+
+$ cat > months.txt
+February 
+January 
+March 
+August 
+September 
+
+Syntax :
+$ sort -M filename.txt
+Using The -M option with sort allows us to order this file.
+
+Command :
+$ sort -M months.txt
+$ cat months.txt
+Output :
+January
+February
+March
+August
+September
+
+20.uniq:
+The uniq command in Linux is a command-line utility that reports or filters out the repeated lines in a file. 
+In simple words, uniq is the tool that helps to detect the adjacent duplicate lines and also deletes the duplicate lines. 
+uniq filters out the adjacent matching lines from the input file(that is required as an argument) and writes the filtered data to the output file. 
+syntax:
+uniq [OPTION] [INPUT[OUTPUT]]
+
+Note: uniq isn’t able to detect the duplicate lines unless they are adjacent to each other. 
+The content in the file must be therefore sorted before using uniq or you can simply use sort -u instead of uniq command. 
+1. Using -c option : It tells the number of times a line was repeated. uniq -c (displays the unique records with count)
+eg:
+uniq -c kt.txt
+3 I love music.
+1
+2 I love music of Kartik.
+1
+1 Thanks.
+
+2. Using -d option : It only prints the repeated lines.
+uniq -d (displays the duplicate records)
+//using uniq with -d//
+
+$uniq -d kt.txt
+I love music.
+I love music of Kartik.
+
+/*it only displayed one
+ duplicate line per group*/
+
+3. Using -D option : It also prints only duplicate lines but not one per group. 
+
+ //using -D option//
+
+$uniq -D kt.txt
+I love music.
+I love music.
+I love music.
+I love music of Kartik.
+I love music of Kartik.
+
+4. Using -u option : It prints only the unique lines.
+ 
+uniq -u(displays only unique records)
+//using -u option//
+
+$uniq -u kt.txt
+Thanks.
+
+/*only unique lines are
+displayed*/
+
+8. Using -i option : It is used to make the comparison case-insensitive. 
+uniq -i (displays the unique recors and case insentive)
+
+//displaying contents of f4.txt//
+
+$cat f4.txt
+I LOVE MUSIC
+i love music
+THANKS
+
+//using uniq command//
+$uniq f4.txt
+I LOVE MUSIC
+i love music
+THANKS
+
+/*the lines aren't treated
+as duplicates with simple 
+use of uniq*/
+
+//now using -i option//
+
+$uniq -i f4.txt
+I LOVE MUSIC
+THANKS
+
+/*now second line is removed
+when -i option is used*/
+
+uniq -id (displays duplicate records with case insenstive)
+uniq -iu(displays the unique records with case insensitive)
+
+27.chmod ---used for files and folders to give or deny read write execute permission to owner or to group or to others of the computer
+eg:chmod [options] mode filename
+options -R(recursive), -f(force), -v(verbose)
+mode:read(r),write(w),execute(x)
+2 ways to give modes
+1)octal:      owner       group       others
+           r   w   x   r    w    x   r   w   x
+          (4) (2) (1)  (4) (2) (1)  (4) (2) (1)
+
+4+2+1=7 which means all permissions
+
+eg:chmod -R 774 filename----here we granted all permission to owner and to members of the group and only read permission to others
+
+2)symbolic:
+ 
+referneces:
+u:owner of the file
+g:users who are the member of the files group
+o:users who are neither u nor g
+a:all ugo
+
+operator:
++:adds mode to specific classes
+-:remove mode
+=:exact mode to specified classes
+
+mode:
+r:read
+w:write
+x:execute
+
+eg:chmod u+x filename
+
+sleep command:
+Sleep command is used to delay for a fixed amount of time during the execution of any script. 
+When the coder needs to pause the execution of any command for the particular purpose then 
+this command is used with the particular time value. You can set the delay amount by 
+seconds (s), minutes (m), hours (h) and days (d). 
+
+sleep number[suffix]
+
+You can use any integer or fractional number as time value. Suffix part is optional for this command. 
+If you omit suffix then time value is calculated as seconds by default. You can use s, m, h and d as suffix value. 
+The following examples show the use of sleep command with different suffixes.
+or
+sleep command is used to create a dummy job. A dummy job helps in delaying the execution. It takes time in seconds by default but a small suffix(s, m, h, d) 
+can be added at the end to convert it into any other format. This command pauses the execution for an amount of time which is defined by NUMBER.
+
+Syntax:
+sleep NUMBER[SUFFIX]...
+
+Example-1: sleep command without any suffix
+In the following script, sleep command is used with numeric value 2 only and no suffix is used. So, if you run the script then the string “Task completed” will 
+print after waiting for 2 seconds.
+
+#!/bin/bash
+ 
+echo "Waiting for 2 seconds..."
+sleep 2
+echo "Task Completed"
+
+Example-2: sleep command with a minute suffix
+In the following script, ‘m‘ is used as the suffix with sleep command. Here, the time value is 0.05 minutes.
+ After waiting 0.05 minutes, “Task completed” message will be printed.
+
+#!/bin/bash
+ 
+echo "Waiting for 0.05 minutes..."
+sleep 0.05m
+echo "Task Completed"
+
+Example-3: sleep command with hour suffix
+In the following script, ‘h‘ is used as the suffix with sleep command. 
+Here, the time value is 0.003 hour. After waiting 0.003 hour “Task completed” should be printed on the screen 
+but it requires more times in reality when ‘h’ suffix is used.
+
+#!/bin/bash
+ 
+echo "Waiting for 0.003 hours..."
+sleep 0.003h
+echo "Task Completed"
+ 
+$ time bash sleep3.sh
+
+
+Example-4: sleep command with loop
+ You can use sleep command for various purposes. In the following example, sleep command is used with while loop. 
+Initially, the value of the variable n is set to 1 and the value of n will be incremented by 1 for 4 times in every 2 seconds
+ interval. So, when will you run the script, each output will appear after waiting  2 seconds.
+
+#!/bin/bash
+n=1
+while [ $n -lt 5 ]
+do
+echo "The value of n is now $n"
+sleep 2s
+echo " "
+((n=$n+1))
+done
+
+
+nohup Command in Linux: 
+~~~~~~~~~~~~~~~~~~~~~~
+
+Every command in Linux starts a process at the time of its execution, which automatically gets terminated upon exiting the terminal. 
+Suppose, you are executing programs over SSH and if the connection drops, the session will be terminated, all the executed processes will stop, 
+and you may face a huge accidental crisis. In such cases, running commands in the background can be very helpful to the user and this is where nohup command comes 
+into the picture. nohup (No Hang Up) is a command in Linux systems that runs the process even after logging out from the shell/terminal. 
+
+Usually, every process in Linux systems is sent a SIGHUP (Signal Hang UP) which is responsible for terminating the process after closing/exiting the terminal.
+Nohup command prevents the process from receiving this signal upon closing or exiting the terminal/shell. Once a job is started or executed using the nohup command, 
+stdin will not be available to the user and nohup.out file is used as the default file for stdout and stderr. 
+If the output of the nohup command is redirected to some other file, nohup.out file is not generated. 
+
+Syntax:
+
+nohup command [command-argument ...]
+
+28.ps(process status):As we all know Linux is a multitasking and multi-user systems. 
+   ~~~~~~~~~~~~~~~~~~
+So, it allows multiple processes to operate simultaneously without interfering with each other. 
+Process is one of the important fundamental concept of the Linux OS. 
+A process is an executing instance of a program and carry out different tasks within the operating system. 
+
+Linux provides us a utility called ps for viewing information related with the processes on a system which stands as abbreviation for “Process Status”. 
+ps command is used to list the currently running processes and their PIDs along with some other information depends on different options. 
+It reads the process information from the virtual files in /proc file-system. /proc contains virtual files, this is the reason it’s referred as a virtual file system. 
+
+Syntax:
+~~~~~~~
+ps [options]
+
+Result contains four columns of information. 
+Where, 
+PID – the unique process ID 
+TTY – terminal type that the user is logged into 
+TIME – amount of CPU in minutes and seconds that the process has been running 
+CMD – name of the command that launched the process. 
+
+View all the running processes use either of the following option with ps – 
+ 
+[root@rhel7 ~]# ps -A
+[root@rhel7 ~]# ps -e
+
+View all processes except both session leaders and processes not associated with a terminal. 
+ 
+[root@rhel7 ~]# ps -a
+  PID TTY          TIME CMD
+27011 pts/0    00:00:00 man
+27016 pts/0    00:00:00 less
+27499 pts/1    00:00:00 ps
+
+A unique session is assign to every process group. So, session leader is a process which kicks off other processes.
+The process ID of first process of any session is similar as the session ID.
+
+View all the processes except session leaders : 
+ 
+[root@rhel7 ~]# ps -d
+
+View all processes associated with this terminal : 
+ 
+[root@rhel7 ~]# ps -T
+View all the running processes : 
+ 
+[root@rhel7 ~]# ps -r
+
+View all processes owned by you : Processes i.e same EUID as ps which means runner of the ps command, root in this case – 
+ 
+[root@rhel7 ~]# ps -x
+
+View processes using highest memory. 
+ 
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem
+
+
+29.date command is used to display the system date and time. date command is also used to set date and time of the system. 
+By default the date command displays the date in the time zone on which unix/linux operating system is configured.
+You must be the super-user (root) to change the date and time. 
+
+Syntax: 
+
+date [OPTION]... [+FORMAT]
+date [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]
+
+1: date (no option): With no options, the date command displays the current date and time, including the abbreviated day name, 
+abbreviated month name, day of the month, the time separated by colons, the time zone name, and the year. 
+
+Command: 
+$date
+Output: 
+Tue Oct 10 22:55:01 PDT 2017
+
+2: -u Option: Displays the time in GMT(Greenwich Mean Time)/UTC(Coordinated Universal Time )time zone. 
+ 
+Command: 
+$date -u
+Output :
+Wed Oct 11 06:11:31 UTC 2017
+
+4: Using –date option for displaying past dates:  
+
+Command: 
+$date --date="2 year ago"
+Output: 
+Sat Oct 10 23:42:15 PDT 2015
+
+Command: 
+$date --date="5 sec ago"
+Output: 
+Tue Oct 10 23:45:02 PDT 2017 
+
+Command:
+$date --date="yesterday"
+Output: 
+Mon Oct  9 23:48:00 PDT 2017
+
+Command: 
+$date --date="2 month ago"
+Output: 
+Thu Aug 10 23:54:51 PDT 2017
+
+Command: 
+$date --date="10 day ago"
+Output: 
+Sat Sep 30 23:56:55 PDT 2017
+
+5: Using –date option for displaying future date:  
+
+Date and time of upcoming particular week day.  
+
+Command: 
+$date --date="next tue"
+Output: 
+Tue Oct 17 00:00:00 PDT 2017
+Date and time after two days. 
+
+Command: 
+$date --date="2 day"
+Output: 
+Fri Oct 13 00:05:52 PDT 2017
+Date and time of next day. 
+
+Date and time of next day. 
+
+Command: 
+$date --date="tomorrow"
+Output: 
+Thu Oct 12 00:08:47 PDT 2017
+Date and time after 1 year on the current day. 
+
+Command: 
+$date --date="1 year"
+Output: 
+Thu Oct 11 00:11:38 PDT 2018
+
+30.kill command:
+   ~~~~~~~~~~~~
+Linux is a great and advanced operating system, but it is not perfect. Once in a while, some applications may start behaving 
+erratically and become unresponsive or start consuming a lot of system resources. Unresponsive applications cannot be restarted 
+because the original application process never shuts down completely. 
+The only solution is to either restart the system or kill the application process.
+
+syntax:
+~~~~~~~
+kill [OPTIONS] [PID]...
+
+
+The kill command sends a signal to specified processes or process groups, causing them to act according to the signal. 
+When the signal is not specified, it defaults to -15 (-TERM).
+The most commonly used signals are:
+
+1 (HUP) - Reload a process.
+9 (KILL) - Kill a process.
+15 (TERM) - Gracefully stop a process.
+
+Signals can be specified in three different ways:
+
+Using number (e.g., -1 or -s 1).
+Using the “SIG” prefix (e.g., -SIGHUP or -s SIGHUP).
+Without the “SIG” prefix (e.g., -HUP or -s HUP).
+The following commands are equivalent to one another:
+
+kill -1 PID_NUMBER
+kill -SIGHUP PID_NUMBER
+kill -HUP PID_NUMBER
+
+Terminating Processes Using the kill Command:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To terminate or kill a process with the kill command, first you need to find the process ID number (PID). 
+You can do this using different commands such as top, ps , pidof and pgrep .
+
+Let’s say the Firefox browser has become unresponsive, and you need to kill the Firefox process. 
+To find the browser PIDs use the pidof command:
+
+pidof firefox
+
+Once you know the processes numbers, you can kill all of them by sending the TERM signal:
+
+kill -9 6263 6199 6142 6076
+Copy
+Instead of searching for PIDs and then killing the processes, you can combine the above commands into one:
+
+kill -9 $(pidof firefox)
+
+
+Reloading Processes Using the kill Command:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Another common use case for kill is to send the HUP signal, which tells the processes to reload its settings.
+For example, to reload Nginx , you need to send a signal to the master process. The process ID of the Nginx master process 
+can be found in the nginx.pid file, which is typically is located in the /var/run directory.
+
+Use the cat command to find the master PID:
+
+cat /var/run/nginx.pid
+
+output:
+30251
+Copy
+Once you found the master PID reload the Nginx settings by typing:
+sudo kill -1 30251
+Copy
+The command above must be run as root or user with sudo privileges.
+
+Conclusion
+The kill command is used to send a signal to processes. The most frequently-used signal is SIGKILL or -9, which terminates the given processes.
+
+shebang:
+~~~~~~~
+In Linux shell scripting, the shebang is a special character sequence consisting of the # (pound key) and! (exclamation mark). 
+It is used to specify the interpreter with which the given script will be run by default.2 The shebang directive must be the first line in the script and must 
+start with shebang #!. The interpreter must be the full path to a binary file, for example, /bin/bash.1 The shebang is also known as a hashbang, shabang, or "
+sharp-exclamation" and is used to tell the operating system which interpreter to use when executing the script.3 It takes its name from two 
+slang terms for the "#" and "!" characters
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
