@@ -1,0 +1,248 @@
+select * from emp
+
+create table users
+(
+user_id int primary key,
+user_name varchar(30) not null,
+email varchar(50));
+
+insert into users values
+(1, 'Sumit', 'sumit@gmail.com');
+insert into users values
+(2, 'Reshma', 'reshma@gmail.com');
+insert into users values
+(3, 'Farhana', 'farhana@gmail.com');
+insert into users values
+(4, 'Robin', 'robin@gmail.com');
+insert into users values
+(5, 'Robin', 'robin@gmail.com');
+
+commit
+
+-- Query 1:
+
+Write a SQL query to fetch all the duplicate records from a table.
+
+select * from users
+
+select * from (select user_id,user_name,email,row_number() over (partition by user_name order by user_id) as rnk from users) x where x.rnk >1
+
+
+-- Query 2:
+
+Write a SQL query to fetch the second last record from a employee table.
+
+select * from emp
+
+select * from (select emp_id,emp_name,dept_name,salary,row_number() over(order by emp_id desc)rnk from emp)x where x.rnk=2 
+
+
+-- Query 3:
+
+Write a SQL query to display only the details of employees who either earn the highest salary
+or the lowest salary in each department from the employee table.
+
+select emp_id,emp_name,dept_name,salary,max(salary) over(partition by dept_name) as maz_sal,
+                                        min(salary) over(partition by dept_name) as min_sal from emp 
+                                        
+select t1.emp_id,t1.emp_name,t1.dept_name,t1.salary from emp  t1 
+join(select emp_id,emp_name,dept_name,salary,max(salary) over(partition by dept_name) as maz_sal,
+                              min(salary) over(partition by dept_name) as min_sal from emp) t2
+                              on t1.emp_id=t2.emp_id and (t1.salary=t2.maz_sal or t1.salary=t2.min_sal)order by t.dept_name,t1.salary;
+
+
+select t1.*,t2.mazsal,t2.minsal from employees t1
+join(select e.*,max(salary) over(partition by department_id) mazsal,min(salary) over(partition by department_id) minsal from employees e) t2
+on t1.employee_id=t2.employee_id and (t1.salary=t2.mazsal or t1.salary=t2.minsal)
+                                        
+
+-- Query 4:
+
+From the doctors table, fetch the details of doctors who work in the same hospital but in different speciality.
+
+
+select t1.id,t1.name,t1.speciality,t1.hospital,t1.city,t1.consultation_fee from doctors t1
+join doctors t2
+on t1.hospital=t2.hospital and t1.speciality<>t2.speciality
+
+--Sub Question:
+
+Now find the doctors who work in same hospital irrespective of their speciality.
+
+select t1.id,t1.name,t1.speciality,t1.hospital,t1.city,t1.consultation_fee from doctors t1
+join doctors t2
+on t1.hospital=t2.hospital
+
+-- Query 5:
+
+From the login_details table, fetch the users who logged in consecutively 3 or more times.
+
+
+select * from login_details
+
+select distinct report from(select login_id,user_name,login_date,case when user_name=lead(user_name) over(order by login_id) and
+                                               user_name=lead(user_name,2) over(order by login_id)then user_name
+                                               else null end report from login_details)x where x.report is not null
+                                               
+-- Query 7:
+
+From the weather table, fetch all the records when London had extremely cold temperature for 3 consecutive days or more.
+
+Note: Weather is considered to be extremely cold then its temperature is less than zero.
+
+select * from weather
+
+select id,city,temperature,day,case when temperature<0 and lead(temperature) over(order by id) <0 and
+                                                    lead(temperature,2) over(order by id)<0 then 'yes' 
+                                         
+                                     when temperature<0 and lag(temperature) over (order by id)<0 and
+                                                     lead(temperature) over (order by id)<0 then 'yes' 
+                                     when temperature<0 and lag(temperature) over(order by id)<0 and
+                                                    lag(temperature,2) over(order by id)<0 then 'yes'  
+                                                    else null end from weather
+                                                    
+select * from emp 
+
+select emp_id,emp_name,dept_name,salary from emp where salary>(select avg(salary) from emp)
+
+SELECT * 
+FROM all_tables tabs
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Query 8:
+From the emp_mgr2 table display the emp_id,emp_name and mgr_name of the employee
+select t1.emp_id,t1.emp_name,t2.emp_name mgr_name from emp_mgr2 t1
+join emp_mgr2 t2
+on t1.mgr_id=t2.emp_id
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--Query 9:
+From the emp_mgr table display the emp_id,emp_name,senior_manager_id,senior_manager name in the emp_mgr table
+
+select t1.emp_id,t1.emp_name,t2.emp_id jr_mgr_id,t2.emp_name jr_mgr_name,t3.emp_id sr_mgr_id,t3.emp_name sr_mgr_name from emp_mgr  t1
+join emp_mgr  t2
+on t1.manager_id=t2.emp_id
+join emp_mgr  t3
+on t2.manager_id=t3.emp_id;
+
+select t1.emp_id,t1.emp_name,t2.emp_id jr_mgr_id,t2.emp_name jr_mgr,t3.emp_id sr_mgr_id,t3.emp_name sr_mgr from emp_mgr t1
+join emp_mgr t2
+on t1.manager_id=t2.emp_id
+join emp_mgr t3
+on t2.manager_id=t3.emp_id
+
+
+select  t1.emp_id,t1.emp_name,t2.manager_id sr_mgr,t3.emp_name sr_mgr_name from emp_mgr  t1
+join emp_mgr  t2
+on t1.manager_id=t2.emp_id
+join emp_mgr  t3
+on t2.manager_id=t3.emp_id;
+
+or 
+select t1.emp_id,t1.emp_name,t2.manager_id as sr_mgr_id,t3.emp_name as 
+sr_mgr_name from emp_mgr t1,emp_mgr t2,emp_mgr t3 where t1.manager_id=t2.emp_id and t2.manager_id=t3.emp_id
+
+select t1.emp_id,t1.emp_name,t2.emp_id senior_manager_id,t2.emp_name senior_manager_name from emp_mgr  t1
+join emp_mgr  t2
+on t1.manager_id=t2.emp_id
+
+select t1.emp_id,t1.emp_name,t2.emp_id jr_mgr_id,t2.emp_name jr_mgr,t3.emp_id sr_mgr_id,t3.emp_name sr_mgr_name 
+from emp_mgr t1,emp_mgr t2,emp_mgr t3
+where t1.manager_Id=t2.emp_id and t2.manager_id=t3.emp_id
+
+select distinct emp_id,emp_name from (select t1.emp_id,t1.emp_name from emp_mgr  t1
+join emp_mgr  t2
+on t1.emp_id=t2.manager_id)
+
+select t1.emp_no,t1.emp_name,t2.emp_name jr_mgr,t3.emp_name sr_mgr from emp_mgr t1
+join emp_mgr t2
+on t1.mgr_no=t2.emp_no
+join emp_mgr t3
+on t2.mgr_no=t3.emp_no
+
+commit
+
+--Query 10:
+From employees table display the second highest salary 
+
+
+select * from employees where salary=(select max(salary) from employees where salary<>(select max(salary) from employees))
+
+or
+
+select * from employees where salary=
+(select max(salary) from employees where salary < (select max(salary) from employees))
+
+select * from (select employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,
+commission_pct,manager_id,department_id,dense_rank() over(order by salary desc)rnk from employees) where rnk=2
+
+
+-->write a sql query to fetch full name and joining date of all the employees who are not working on any project
+
+select t1.emp_name,t1.joining_date from employee_details t1
+join employyesalary t2
+on t1.emp_id=t2.emp_id where t2.project is null
+
+-->write a sql query to fetch all the records that are present in employeedetails but not in employeesalary
+
+select t1.*,t2.* from employee_details t1 
+left outer join employyesalary t2
+on t1.emp_id=t2.emp_id where t2.emp_id is null
+
+
+
+select * from employee_details where emp_id in
+(select emp_id from employee_details
+minus
+select emp_id from employyesalary)
+
+
+select emp_id,rowid,rownum,row_number() over(order by emp_id) from employee_details
+
+
+-->write a sql query to fecth even records from employee_details
+select * from
+(select emp_id,emp_name,row_number() over(order by emp_id) as rnk from employee_details)x where mod(x.rnk,2)=0
+
+select * from(
+select e.*,rownum rnk from employees e) where mod(rnk,2)=0
+
+select * from(
+select e.*,rownum rnk from employees e) where mod(rnk,2)=1----> odd records
+
+--Query 11:
+find the stores whose sales were better than the avg sales across all stores
+
+select store_id,store_name,sum(price)from sales group by store_id,store_name having sum(price)>
+(select avg(total_sales)from
+(select store_id,store_name,sum(price)total_sales from sales group by store_id,store_name ))---------by using sub_query
+
+ 
+select * from(select store_id,store_name,sum(price) total_sales from sales group by store_id,store_name) t1  
+join
+(select avg(total_sales) avg_sales from( 
+select store_id,store_name,sum(price) total_sales from sales group by store_id,store_name)x)t2-------by using joins
+on t1.total_sales>t2.avg_sales-------by using joins
+
+with cte_sales as 
+(select store_id,store_name,sum(price) as total_sales from sales group by store_id,store_name)
+select * from cte_sales t1
+join
+(select avg(total_sales) as avg_sales from cte_sales ) t2
+on t1.total_sales> t2.avg_sales-------by using cte
+
+
+delete from users where user_id not in
+(select max(user_id) from users group by user_name);
+
+delete from users where rowid not in
+(select max(rowid)  from users group by user_name)
+
+delete from users where rowid in
+(select rowid from (select user_id,user_name,email,rowid,row_number() over(partition by user_name order by user_id) as dup_count
+ from users) where dup_count>1)
+
+                                              
+                                                     
+
+
+
+

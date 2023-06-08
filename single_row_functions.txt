@@ -1,0 +1,1978 @@
+SQL:
+~~~
+SQL is a standard language designed for managing data in relational databases.It is commonly used to query,insert,update,delete and modify data.
+Most RDBMS like mysql,oracle,sqlite use SQL.
+
+In SQL data is stored in tables,just like on EXCEL spreadsheet.A table is made up of rows(records) and columns(fields).
+
+The fundamental sql commands are SELECT,FROM,WHERE,GROUP BY,HAVING,ORDER BY.
+
+a)SELECT and FROM:
+  ~~~~~~~~~~~~~~~
+The SELECT statement is used to select data from a database and the FROM statement specifies which table to get the data from.
+The SELECT statement is not just for selecting simple rows.We can use to perform calculations,concatenations and more.
+
+eg:select first_name ||' '|| last_name from employees;
+
+eg:
+~~
+select first_name,last_name from employees;
+
+b)WHERE:
+  ~~~~~
+The WHERE clause is used to filter records
+
+eg:
+~~
+select * from employees where salary>2000;
+
+b)GROUP BY and HAVING:
+  ~~~~~~~~~~~~~~~~~~~
+GROUP BY groups rows that have the same values in specified columns into aggregated data.HAVING is used instead of WHERE with aggregated data.
+
+eg:
+~~
+select department,count(*) from employees group by department having count(*)>5;
+
+c)ORDER BY:
+  ~~~~~~~~
+ORDER BY is used to sort the data in ascending or descending order
+
+eg:
+~~
+select * from employees order by first_name asc;
+
+d)BETWEEN: 
+  ~~~~~~~
+BETWEEN is used to filter by a range
+
+eg:
+~~
+select * from employees where salary between 2000 and 5000;
+select * from employees where doj between '6/6/2020' and '6/6/2022';
+
+e)LIKE:
+  ~~~~
+LIKE is used in a where clause to search for a specified pattern in a column.The %(multiple characters) ,_ (single charcater) signs are used to define wildcards(missing letters)
+both before and and after pattern.Also,note that like is case sensitive.ILIKE can be used for case insensitive search.
+
+eg:
+~~
+select * from employees where first_name like 'J%';
+select * from employees where last_name like 'Joh_';
+
+f)IN:
+  ~~
+IN allows you to specify multiple values in  a where clause:
+
+eg:
+~~
+select * from employees where department in ('HR','DEV','QA','PROD');
+
+g)JOIN:
+  ~~~~
+JOIN statements are used to combine rows from two or more tables based on a related column.The different type of JOINS are inner join,left outer join,right outer join
+and full outer join.
+
+eg:
+~~
+select employees.first_name,employees.last_name,employees.department_id,department.department_name from employees
+inner join department
+on employees.department_id=department.department_id
+
+h)Aggregation functions:
+  ~~~~~~~~~~~~~~~~~~~~~
+sql provides several functions to perform calculations on data,such as count,sum(),avg(),min(),max() and group_concat().
+
+eg:
+~~
+
+select count(*) from orders where orderdate between '2021/01/01' and '2023/12/31';
+
+i)Subqueries and nested queries:
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A Subquery is a sql query nested inside a another query.A Subquery may occur in select clause,from clause,where clause.
+
+eg:
+~~
+select employee_id,first_name,department_id from employees where employee_id in(select employee_id from orders where ordertotal>1000);
+
+j)Date and Time functions:
+  ~~~~~~~~~~~~~~~~~~~~~~~
+SQL provides many fuctions to work with date and time.Some examples include now(),curdate(),curtime()
+
+eg:
+~~
+select order_id,order_total.now() as querytime from orders where orderdate=curdate()
+
+k)WINDOW FUNCTIONS:
+  ~~~~~~~~~~~~~~~~
+The aggregate functions perform calculations across a set of rows and return a single output row.
+
+eg:
+~~
+SELECT 
+    SUM(salary) sum_salary
+FROM
+    employees;
+
+output:
+~~~~~~
+ __________
+|sum_salary|
+ ___________|
+|3000000     |
+______________
+
+As shown clearly in the output, all rows from the  employees table are grouped into a single row.
+
+Similar to an aggregate function, a window function calculates on a set of rows. However, a window function does not cause rows to become grouped into a single output row.
+
+The following query uses the SUM() as a window function. It returns the sum salary of all employees along with the salary of each individual employee:
+
+SELECT
+    first_name,
+    last_name,
+    salary,
+    SUM(salary) OVER() sum_salary
+FROM
+    employees;
+
+In this example, the OVER() clause signals that the SUM() function is used as a window function.
+
+NVL function is not defined in MySQL or SQL servers but it is defined in Oracle. In SQL servers IFNULL is defined. NVL works the same as 
+the IFNULL function in SQL. To replace the value of NULL, void, empty, or zero we use the NVL function.It returns either numeric or string values.
+
+The Syntax of NVL function: -
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+nvl(arg1,arg2)
+
+SELECT NVL (Value, Substitute) FROM table;
+
+NVL function takes two arguments.
+
+nvl(arg1,arg2)--(if the arg1 is null then arg2,if arg1 is not null then arg1)
+
+Value - The name of the expression whose value is to be changed.
+Substitute - The value you want in place of the previous value. This value will be returned in the result.
+If the value is null then NVL will return a substitute else it will return the value itself.
+
+select * from nvl_prac
+eg:
+~~
+select nvl(emp_id,1025)as id from nvl_prac---(here we are substituting or replacing if there is a null then substitute with 1025)
+select salary,commission_pct,(salary+salary*nvl(commission_pct,0)) as total_salary from employees--(here we are substituing if the commission_pct is null then zero and calculating total salary)
+select nvl(null,2) from dual
+select nvl(1,2) from dual
+select nvl(null,null) from dual
+select nvl(date,sysdate)from dual--(here we are saying if the date is null then replace with sysdate)
+
+NVL2:
+~~~~
+This function first checks if the first expression is null or not. It takes 3 arguments as input. If the first expression is found null then 
+it will return expression2 otherwise it will return expression3. This works for any data type.
+
+syntax:
+~~~~~~
+NVL2 (arg1,arg2,arg3)--if the arg1 is null then it will return arg3,if the arg1 is not null then it will return arg2
+eg:
+~~~
+select nvl2(2,4,6) from dual--it will return 4 because arg1 is not null
+select nvl2(null,2,6) from dual--it will return 6 because arg1 is null
+select emp_id,allocation_id,nvl2(allocation_id,'allocated','bench')as allocation_status from nvl_prac
+
+NULLIF:
+~~~~~~
+In the NULLIF function, if the value of both arg is the same, then it will return null otherwise it will return the 
+value of the arg1.
+syntax
+~~~~~~
+nullif(arg1,arg2)--it takes two arguments if arg1=arg2 then it will return null,if arg1!=arg2 then it will return arg1
+
+select nullif(2,4)from dual --it will return 2 becuase arg1!=arg2
+
+select nullif(2,2) from dual --it will return null
+
+select first_name,last_name from dual where nullif(first_name,last_name) is null--here we are checking wether the first_name and last_name is same or not using null if
+or
+select first_name,last_name from dual where first_name=last_name
+
+COALESCE:
+~~~~~~~~
+COALESCE function can take multiple alternate values. It will check if the first expression is null or not. 
+It returns the first not-null value mentioned in the list.
+
+syntax:
+~~~~~~
+coalesce(arg1,arg2,arg3,...argn)--it will return first not null value
+
+eg:
+~~
+select salary,commission_pct,(salary+salary*coalesce(commission_pct,0)) as total_salary from employees
+
+select commission_pct,manager_id,department_id,coalesce(commission_pct,manager_id,department_id,0) from employees--it will retutn first not null value from
+these three columns if three columns are null then it will return 0.
+
+select coalesce(mobile_no,office_no,residence_no,'no_phone_number') from dual
+
+Case Conversion functions: Accepts character input and returns a character value. Functions under the category are UPPER, LOWER and INITCAP.
+~~~~~~~~~~~~~~~~~~~~~~~~~
+select first_name,upper(first_name),lower(first_name),initcap(first_name),length(first_name),reverse(first_name) from employees
+
+
+select * from employees where first_name='John' OR first_name='john' or first_name='JOHN'
+
+select * from employees where lower(first_name)='john'--in real time we will use this to not miss  any records
+or
+select * from employees where upper(first_name)='JOHN'
+
+Character functions: Accepts character input and returns number or character value. Functions under the category are CONCAT, LENGTH, SUBSTR,
+~~~~~~~~~~~~~~~~~~~
+INSTR, LPAD, RPAD, TRIM and REPLACE.
+
+concat:The CONCAT() function adds two or more strings together.
+~~~~~~
+Syntax
+CONCAT(string1, string2, ...., string_n)
+eg:
+~~
+select first_name,last_name,concat(first_name,last_name) from hr.employees
+select first_name ||' ' || last_name from hr.employees
+
+substr:SUBSTR functions allows you to extract a substring from a string.
+~~~~~~
+syntax:
+SUBSTR( string, start_position [, length ] )
+
+Parameters or Arguments:
+~~~~~~~~~~~~~~~~~~~~~~~
+string
+The source string.
+start_position
+The starting position for extraction. The first position in the string is always 1.
+length
+Optional. It is the number of characters to extract. If this parameter is omitted, the SUBSTR function will return the entire string.
+
+Note:
+If start_position is 0, then the SUBSTR function treats start_position as 1 (ie: the first position in the string).
+If start_position is a positive number, then the SUBSTR function starts from the beginning of the string.
+If start_position is a negative number, then the SUBSTR function starts from the end of the string and counts backwards.
+
+eg:
+select substr('welcome to india',12) from dual-- this will return india,12 means it starts taking characters from 12 th postion
+
+select substr('welcome to india',-5) from dual-- this will return india,-5 will take 5 characters from right side
+
+select substr('welcome to india!!!',12,5) from dual--this will return 5 characters from 12 th position
+
+instr:INSTR function returns the location of a substring in a string.
+~~~~
+syntax:
+~~~~~~
+INSTR( string, substring [, start_position [, th_appearance ] ] )
+
+Parameters or Arguments
+string
+The string to search. string can be CHAR, VARCHAR2, NCHAR, NVARCHAR2, CLOB, or NCLOB.
+substring
+The substring to search for in string. substring can be CHAR, VARCHAR2, NCHAR, NVARCHAR2, CLOB, or NCLOB.
+start_position
+Optional. The position in string where the search will start. If omitted, it defaults to 1. The first position in the string is 1. If the start_position 
+is negative,the INSTR function counts back start_position number of characters from the end of string and then searches towards the beginning of string.
+nth_appearance
+Optional. The nth appearance of substring. If omitted, it defaults to 1.
+
+eg:
+select instr('welcome to india','e',1) from dual
+
+select instr('corporate floor','r') from dual
+
+select instr('corporate floor','r',1,2) from dual --(here we are mentioing to find the position of r from 1st position 2 nd occurance)
+
+select instr('corporate floor','r',3,2) from dual
+
+select instr('corporate floor','or',3,2) from dual
+
+select instr('corporate floor','AB') from dual -- if there is no matching it will return zero
+
+select substr('insurance~100',1,instr('insurance~100','~',1)-1) from dual
+
+select substr('insurance~100',instr('insurance~100','~')+1)from dual
+
+select substr('nazeeruddin@gmail.com',1,instr('nazeeruddin@gmail.com','.',1)-1,instr(substr('nazeeruddin@gmail.com',1,instr('nazeeruddin@gmail.com','.',1)-1,'@',1)+1)) from dual
+
+select substr('nazeeruddin@gmail',instr('nazeeruddin@gmail','@',1)+1) from dual
+
+select instr('nazeer uddin shaik',' ',1,1) from dual
+
+select instr('nazeer uddin shaik',' ',1,2) from dual
+
+select substr(regexp_substr('vikram.singh@abc.com.edu.text','[^\.]+',1,2),1,instr(regexp_substr('vikram.singh@abc.com.edu.text','[^\.]+',1,2),'@',1)-1) from dual
+
+select substr('nazeer uddin shaik',1,instr('nazeer uddin shaik',' ',1,2)-1) from dual
+
+select substr('nazeeruddin@gmail.com',1,instr('nazeeruddin@gmail.com','.',1)-1) from dual
+
+select substr(substr('nazeeruddin@gmail.com',1,instr('nazeeruddin@gmail.com','.',1)-1),
+instr(substr('nazeeruddin@gmail.com',1,instr('nazeeruddin@gmail.com','.',1)-1),'@',1)+1) from dual
+
+select substr(substr('shaiknazeeruddin001@gmail.com',instr('shaiknazeeruddin001@gmail.com','@')+1),1,
+instr(substr('shaiknazeeruddin001@gmail.com',instr('shaiknazeeruddin001@gmail.com','@')+1),'.',1)-1) from dual
+
+select regexp_substr('shaiknazeeruddin001@gmail.com','[^@\.]+',1,2) from dual
+
+LPAD:LPAD function pads the left-side of a string with a specific set of characters (when string1 is not null).
+~~~~
+Syntax:
+~~~~~~
+LPAD( string1, padded_length [, pad_string] )
+
+Parameters or Arguments
+string1
+The string to pad characters to (the left-hand side).
+padded_length
+The number of characters to return. If the padded_length is smaller than the original string, the LPAD function will truncate the string to 
+the size of padded_length.
+pad_string
+Optional. This is the string that will be padded to the left-hand side of string1. If this parameter is omitted, the LPAD function will pad 
+spaces to the left-side of string1.
+
+eg:
+~~
+select lpad('welcome',15,'*') from dual--if the string is not 15 characters then it will pad the remaining spaces on left side,here it will pad 8 * on left side 
+
+select lpad(salary,15,0) from hr.employees
+
+select lpad(salary,15,0) from hr.employees
+
+RPAD:RPAD function pads the right-side of a string with a specific set of characters (when string1 is not null).
+~~~~
+syntax:
+~~~~~~
+RPAD( string1, padded_length [, pad_string] )
+
+eg:
+~~
+select rpad('welcome',15,'*') from dual
+
+select rpad(salary,15,0) from hr.employees
+
+select lpad(rpad('one lakh rupees',20,'*'),25,'*') from dual
+
+LTRIM:LTRIM function removes all specified characters from the left-hand side of a string.
+~~~~~
+SYNTAX:
+~~~~~~
+LTRIM( string1 [, trim_string] )
+Parameters or Arguments
+string1
+The string to trim the characters from the left-hand side.
+trim_string
+Optional. The string that will be removed from the left-hand side of string1. If this parameter is omitted, the LTRIM function 
+will remove all leading spaces from string1.
+
+eg:
+~~
+select ltrim('        welcome') from dual
+
+select ltrim(000001002245,0) from dual
+
+select ltrim(001210224510,021)from dual
+
+Rtrim:RTRIM function removes all specified characters from the right-hand side of a string.
+~~~~~
+syntax:
+~~~~~~~
+RTRIM( string1 [, trim_string ] )
+Parameters or Arguments
+string1
+The string to trim the characters from the right-hand side.
+trim_string
+Optional. The string that will be removed from the right-hand side of string1. If this parameter is omitted, 
+the RTRIM function will remove all trailing spaces from string1.
+
+eg:
+~~
+select rtrim('welcome      ') from dual
+
+select rtrim(000001002245,0) from dual
+
+select rtrim(001210224510,021)from dual
+
+Trim:TRIM function removes all specified characters either from the beginning or the end of a string.
+~~~~
+
+syntax:
+~~~~~~
+TRIM( [ [ LEADING | TRAILING | BOTH ] trim_character FROM ] string1 )
+
+Parameters or Arguments
+LEADING
+The function will remove trim_character from the front of string1.
+TRAILING
+The function will remove trim_character from the end of string1.
+BOTH
+The function will remove trim_character from the front and end of string1.
+trim_character
+The character that will be removed from string1. If this parameter is omitted, the TRIM function will remove space characters from string1.
+string1
+The string to trim.
+
+
+Replace:REPLACE function replaces a sequence of characters in a string with another set of characters.
+~~~~~~~
+syntax:
+~~~~~~
+REPLACE( string1, string_to_replace [, replacement_string] )
+Parameters or Arguments
+string1
+The string to replace a sequence of characters with another set of characters.
+string_to_replace
+The string that will be searched for in string1.
+replacement_string
+Optional. All occurrences of string_to_replace will be replaced with replacement_string in string1. If the replacement_string parameter is omitted, the REPLACE function simply removes all 
+occurrences of string_to_replace, and returns the resulting string.
+
+eg:
+~~
+select replace('jack and jue','j','bl') from dual--here we are saying where ever j comes replace with bl
+
+select replace(job,'manager','boss') from dual--here we are saying in column where ever manager comes replace with boss
+
+select replace(lower(job),'manager','boss') from dual
+
+select phone_number,replace(phone_number,'.','')from hr.employees--here we are saying where ever . comes replace with null so that we are removing '.'
+
+select phone_number,'+91'||'-'||replace(phone_number,'.','') from hr.employees
+
+select phone_number,'+91'||'-'||substr(replace(phone_number,'.',''),1,5)||'-'||substr(replace(phone_number,'.',''),6) from hr.employees
+
+Translate:TRANSLATE function replaces a sequence of characters in a string with another set of characters. However, it replaces a single character at a time.
+~~~~~~~~~
+syntax:
+~~~~~~
+TRANSLATE( string1, string_to_replace, replacement_string )
+Parameters or Arguments
+string1
+The string to replace a sequence of characters with another set of characters.
+string_to_replace
+The string that will be searched for in string1.
+replacement_string
+All characters in the string_to_replace will be replaced with the corresponding character in the replacement_string.
+
+eg:
+~~
+select translate('welcome to chennai','abcd','wxyz') from dual-- it will translate position wise
+
+welcome to chennai--->welyome to yhennwi
+
+a - w
+b - x
+c - y
+d - z
+
+Round:ROUND function returns a number rounded to a certain number of decimal places.
+~~~~~
+syntax:
+ROUND( number [, decimal_places] )
+Parameters or Arguments
+number
+The number to round.
+decimal_places
+Optional. The number of decimal places rounded to. This value must be an integer. If this parameter is omitted, 
+the ROUND function will round the number to 0 decimal places.
+
+eg:
+~~
+select round(0.7) from dual--it will return one,if the digit after the decimal is more than five ilt will to next highest value
+
+select round(0.4) from dual--it will return zero,if the digit after the decimal is less than five it will return the nearest lowest value
+
+select round(4.35) from dual--it will return 4
+
+select round(5435.3878) from dual
+
+select round(5435.3878,2) from dual-- here we are saying consider two digits after decimal,so it will carry forward 1 to the preceeding digit
+
+select round(5435.783258,3) from dual
+
+select round(5435.7878,-1) from dual-- here -1 means it will consider left side from the decimal point and round the number,here the digit right
+to decimal point is 5 so it will become zero and carry forward one value to prceeding digit
+
+select round(5434.7878,-1) from dual-- since the digit right to the decimal is four so it wont carry forward any value.
+
+select round(5434.7686,-2) from dual -- it will return to digits to the right side
+
+select round(sysdate,'year') from dual
+
+Trunc:TRUNC function returns a number truncated to a certain number of decimal places.
+~~~~~
+syntax:
+~~~~~~
+TRUNC( number [, decimal_places] )
+Parameters or Arguments
+number
+The number to truncate.
+decimal_places
+Optional. The number of decimal places to truncate to. This value must be an integer. If this parameter is omitted, the TRUNC function
+will truncate the number to 0 decimal places.
+
+eg:
+~~
+select trunc(5435.7878) from dual -- trunc will always takes base value
+
+select trunc(5435.7878,2),round(5435.7878) from dual--trunc will return 5435.78,round will return 5436
+
+select trunc(1) from dual--it will return 1
+
+select trunc(0.6)from dual--it will return 0
+
+select SYSTIMESTAMP from dual
+
+select trunc(systimestamp) from dual--if we want to take the date from systimestamp then we can go for sysimestamp
+
+select trunc(to_date('1-apr-2022','dd-mon-yyyy')) from dual
+
+ceil:will alway consider the top value
+~~~~
+select ceil(0.00000001) from dual--it will return 1 even it is 0.001
+
+select ceil(5.0000000001) from dual-- it will return 6
+
+floor:will alway consider the base value
+~~~~~
+select floor(6.99999) from dual---it will return 6 even it is close to 7
+
+select floor(0.99999) from dual --it will return 0
+
+mod:it will return reminder in the division operation
+~~~
+
+select mod(55,4)from dual
+
+select * from hr.employees where mod(to_char(hire_date,'yyyy'),4)=0--this will return the employees who hired in leap year
+
+select * from hr.employees where mod(to_char(hire_date,'yyyy'),4)!=0--this will return the employees who hired in non leap year
+
+select * from hr.employees where mod(employee_id,2)=0--this will return the even employee_id records
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+months_between:returns the no.of month between two dates
+
+select (months_between(to_date('2/22/2023','mm/dd/yyyy'),to_date('4/26/2016','mm/dd/yyyy'))) from dual
+
+select round(months_between(sysdate,to_date('04/26/1999','mm/dd/yyyy'))) from dual
+
+days between to dates:retuns the no.of days between two dates
+
+syntax:date1 - date2
+select to_date('08.10.1995','mm.dd.yyyy')-to_date('04.26.1998','mm.dd.yyyy')from dual
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+next_day:will return the next day of the given date
+~~~~~~~~
+
+select next_day(sysdate,'friday') from dual---here we are finding next friday date 
+
+select next_day('26-april-1998','friday') from dual
+
+last_day--returns the last day of given month
+
+select last_day(sysdate) from dual
+
+select last_day(sysdate+25)from dual
+
+add_months:adds months to particular date
+~~~~~~~~~~
+select add_months('01-jan-2000',60) from dual
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Like:LIKE condition allows wildcards to be used in the WHERE clause of a SELECT, INSERT, UPDATE, or
+DELETE statement. This allows you to perform pattern matching.
+
+syntax:
+expression LIKE pattern [ ESCAPE 'escape_character' ]
+Parameters or Arguments
+expression
+A character expression such as a column or field.
+pattern
+A character expression that contains pattern matching. The patterns that you can choose from are:
+
+Wildcard	Explanation
+%	Allows you to match any string of any length (including zero length)
+_	Allows you to match on a single character
+escape_character
+Optional. It allows you to test for literal instances of a wildcard character such as % or _.
+
+eg:
+~~
+
+Example - Using % wildcard (percent sign wildcard)
+
+Let's explain how the % wildcard works in the Oracle LIKE condition. We want to find all of the customers whose last_name begins with 'Ap'
+
+SELECT first_name
+FROM hr.employees
+WHERE lower(first_name) LIKE 'da%';
+
+SELECT first_name
+FROM hr.employees
+WHERE lower(first_name) LIKE '%er%';
+
+Example - Using _ wildcard (underscore wildcard)
+
+SELECT first_name
+FROM hr.employees
+WHERE lower(first_name) LIKE 'Sm_th';
+
+SELECT *
+FROM hr.employees
+WHERE phone_number LIKE '515.123.456_';
+
+select * from hr.employees
+
+Example - Using NOT Operator
+
+SELECT first_name
+FROM hr.employees
+WHERE first_name NOT LIKE 'W%';
+
+Example - Using Escape Characters
+
+Let's say you wanted to search for a % or a _ character in the Oracle LIKE condition. You can do this using an Escape character.
+
+Please note that you can only define an escape character as a single character (length of 1).
+
+For example:
+
+SELECT *
+FROM suppliers
+WHERE supplier_name LIKE 'Water!%' ESCAPE '!';
+This Oracle LIKE condition example identifies the ! character as an escape character. This statement will return all suppliers whose name is Water%.
+
+Here is another more complicated example using escape characters in the Oracle LIKE condition.
+
+SELECT *
+FROM suppliers
+WHERE supplier_name LIKE 'H%!%' ESCAPE '!';
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+Regexp_like:REGEXP_LIKE condition allows you to perform regular expression matching in the WHERE clause of a SELECT, INSERT, UPDATE, or DELETE statement.
+~~~~~~~~~~~
+syntax:
+~~~~~~
+REGEXP_LIKE ( expression, pattern [, match_parameter ] )
+
+Parameters or Arguments
+expression:
+A character expression such as a column or field. It can be a VARCHAR2, CHAR, NVARCHAR2, NCHAR, CLOB or NCLOB data type.
+pattern:
+The regular expression matching information. It can be a combination of the following:
+
+^	Matches the beginning of a string. If used with a match_parameter of 'm', it matches the start of a line anywhere within expression.
+$	Matches the end of a string. If used with a match_parameter of 'm', it matches the end of a line anywhere within expression.
+*	Matches zero or more occurrences.
++	Matches one or more occurrences.
+?	Matches zero or one occurrence.
+.	Matches any character except NULL.
+|	Used like an "OR" to specify more than one alternative.
+[ ]	Used to specify a matching list where you are trying to match any one of the characters in the list.
+[^ ]	Used to specify a nonmatching list where you are trying to match any character except for the ones in the list.
+( )	Used to group expressions as a subexpression.
+{m}	Matches m times.
+{m,}	Matches at least m times.
+{m,n}	Matches at least m times, but no more than n times.
+\n	n is a number between 1 and 9. Matches the nth subexpression found within ( ) before encountering \n.
+[..]	Matches one collation element that can be more than one character.
+[::]	Matches character classes.
+[==]	Matches equivalence classes.
+\d	Matches a digit character.
+\D	Matches a nondigit character.
+\w	Matches a word character.
+\W	Matches a nonword character.
+\s	Matches a whitespace character.
+\S	matches a non-whitespace character.
+\A	Matches the beginning of a string or matches at the end of a string before a newline character.
+\Z	Matches at the end of a string.
+*?	Matches the preceding pattern zero or more occurrences.
++?	Matches the preceding pattern one or more occurrences.
+??	Matches the preceding pattern zero or one occurrence.
+{n}?	Matches the preceding pattern n times.
+{n,}?	Matches the preceding pattern at least n times.
+{n,m}?	Matches the preceding pattern at least n times, but not more than m times.
+
+match_parameter
+Optional. It allows you to modify the matching behavior for the REGEXP_LIKE condition. It can be a combination of the following:
+
+Value	Description
+'c'	Perform case-sensitive matching.
+'i'	Perform case-insensitive matching.
+'n'	Allows the period character (.) to match the newline character. By default, the period is a wildcard.
+'m'	expression is assumed to have multiple lines, where ^ is the start of a line and $ is the end of a line, regardless of the position of those characters in expression. By default, expression is assumed to be a single line.
+'x'	Whitespace characters are ignored. By default, whitespace characters are matched like any other character.
+
+Example - Match on more than one alternative
+
+SELECT last_name
+FROM contacts
+WHERE REGEXP_LIKE (last_name, 'Anders(o|e|a)n');
+This REGEXP_LIKE example will return all contacts whose last_name is either Anderson, Andersen, or Andersan. 
+The | pattern tells us to look for the letter "o", "e", or "a".
+
+Example - Match on beginning
+
+SELECT last_name
+FROM contacts
+WHERE REGEXP_LIKE (last_name, '^A(*)');
+This REGEXP_LIKE example will return all contacts whose last_name starts with 'A'.
+
+SELECT last_name
+FROM contacts
+WHERE REGEXP_LIKE (last_name, '^A(*)')
+
+Example - Match on end
+Next, let's use the REGEXP_LIKE condition to match on the end of a string. For example:
+
+SELECT last_name
+FROM contacts
+WHERE REGEXP_LIKE (last_name, '(*)n$');
+This REGEXP_LIKE example will return all contacts whose last_name ends with 'n'.
+
+select * from hr.employees
+
+select * from hr.employees where regexp_like(phone_number,'\d{3}.\d{2}.\d{3,4}.\d{5,6}')--for any digit we can use \d or [0-9] or [[:digit:]]
+
+select * from hr.employees where regexp_like(phone_number,'[0-9]{3}.[0-9]{3}.[0-9]{3,4}')
+
+select * from hr.employees where regexp_like(phone_number,'[[:digit:]]{3}.[[:digit:]]{3}.[[:digit:]]{2,}')
+
+select hire_date from hr.employees where regexp_like(hire_date,'^0?[0-9]|[1-2][0-9]|[3][1-2]-[a-z A-Z]{3}-0?[0-9]|[0-9][0-9]$')
+
+select first_name from hr.employees where regexp_like (first_name,'[:SNL:]')-- : means individual characters i.e first_name should start with S OR N OR L
+
+select first_name from hr.employees where regexp_like (first_name,'[A-C]')-- - means range between A TO C
+
+select first_name from hr.employees where regexp_like (first_name,'^[^A-G]')-- if we ^ symbol inside the [] then it means negate,here the characters of the first_name shouldn't start with A-G
+
+select first_name from hr.employees where regexp_like(first_name,'^[B]')-- if we give the ^ symbol before the [] means  the character of the first_name should start with A.
+
+select phone_number from hr.employees where regexp_like(phone_number,'^[:0:]')-- the phone_number should start with zero.
+
+select phone_number from hr.employees where regexp_like(phone_number,'\d{5,}$')--here the phone_number should end with 
+atleat 5 digits $ means ending characters,^ means starting character
+
+select first_name from hr.employees where regexp_like(first_name,'(K|G|H)')-- here the first_name should start with K OR G OR H.
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+Regexp_substr:REGEXP_SUBSTR function is an extension of the SUBSTR function. This function, introduced in Oracle 10g, will allow you
+~~~~~~~~~~~~~
+to extract a substring from a string using regular expression pattern matching.
+
+syntax:
+~~~~~~~
+REGEXP_SUBSTR( string, pattern [, start_position [, nth_appearance [, match_parameter [, sub_expression ] ] ] ] )
+
+SELECT REGEXP_SUBSTR ('TechOnTheNet is a great resource', '(\S*)(\s)')
+FROM dual;
+
+Result: 'TechOnTheNet '
+
+This example will return 'TechOnTheNet ' because it will extract all non-whitespace characters as specified by (\S*) and then the first whitespace 
+character as specified by (\s).The result will include both the first word as well as the space after the word.
+
+If you didn't want to include the space in the result, we could modify our example as follows:
+
+SELECT REGEXP_SUBSTR ('TechOnTheNet is a great resource', '(\S*)')
+FROM dual;
+
+Result: 'TechOnTheNet'
+
+SELECT REGEXP_SUBSTR ('2, 5, and 10 are numbers in this example', '\d')
+FROM dual;
+
+Result: 2
+This example will extract the first numeric digit from the string as specified by \d. In this case, it will match on the number 2.
+
+select regexp_substr('2, 5, and 10 are numbers in this example','\d{2}')from dual--this will return 10 because we have mentioned \d{3}
+
+Example - Match on more than one alternative
+The next example that we will look at involves using the | pattern. The | pattern is used like an "OR" to specify more than one alternative.
+
+For example:
+
+SELECT REGEXP_SUBSTR ('Anderson', 'a|e|i|o|u')
+FROM dual;
+
+Result: 'e'
+
+We could modify our query as follows to perform a case-insensitive search as follows:
+
+SELECT REGEXP_SUBSTR ('Anderson', 'a|e|i|o|u',1,1,'i')--here we mentioned 'i' which mens case in sensitive
+FROM dual;
+
+Result: 'A'
+
+select regexp_substr('TechOnTheNet is a great resource','[^\S*]+')from dual
+
+select substr('TechOnTheNet is a great resource',instr('TechOnTheNet is a great resource',' ',1,2)+1,instr('TechOnTheNet is a great resource',' ',1,3)-1) from dual
+
+select instr('TechOnTheNet is a great resource',' ',1,2)from dual
+
+select instr('TechOnTheNet is a great resource',' ',1,3) from dual
+
+select substr('TechOnTheNet is a great resource',17,1)from dual
+
+select regexp_substr('nazeer@gmail.com','[^@]+',1,2)from dual
+
+select regexp_substr('nazeer@gmail.com','[^@\.]+',1,3) from dual --here we are negating @ and . and extracting last string
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+Regexp_instr:REGEXP_INSTR function is an extension of the INSTR function. It returns the location of a regular expression pattern in a string. This function, introduced in Oracle 10g, 
+~~~~~~~~~~~
+will allow you to find a substring in a string using regular expression pattern matching.
+
+syntax:
+~~~~~~~
+REGEXP_INSTR( string, pattern [, start_position [, nth_appearance [, return_option [, match_parameter [, sub_expression ] ] ] ] ] )
+
+Example - Match on Single Character
+Let's start by looking at the simplest case. Let's find the position of the first 't' character in a string.
+
+For example:
+
+SELECT REGEXP_INSTR ('TechOnTheNet is a great resource', 't')
+FROM dual;
+
+Result: 12
+This example will return 12 because it is performing a case-sensitive search of 't'. Therefore, it skips the 'T' characters
+and finds the first 't' in the 12th position.
+
+If we wanted to include both 't' and 'T' in our results and perform a case-insensitive search, we could modify our query as follows:
+
+SELECT REGEXP_INSTR ('TechOnTheNet is a great resource', 't', 1, 1, 0, 'i')
+FROM dual;
+
+Result: 1
+Now because we have provide a start_position of 1, an nth_appearance of 1, a return_option of 0, and a match_parameter of 'i',
+the query will return 1 as the result.This time, the function will search for both 't' and 'T' values and return the first occurrence.
+
+If we wanted to find the first occurrence of the character 't' in a column, we could try something like this (case-insensitive search):
+
+SELECT REGEXP_INSTR (last_name, 't', 1, 1, 0, 'i') AS First_Occurrence
+FROM contacts;
+This would return the first occurrence of 't' or 'T' values in the last_name field from the contacts table.
+
+Example - Match on Multiple Characters
+Let's look next at how we would use the REGEXP_INSTR function to match on a multi-character pattern.
+
+For example:
+
+SELECT REGEXP_INSTR ('The example shows how to use the REGEXP_INSTR function', 'ow', 1, 1, 0, 'i')
+FROM dual;
+
+Result: 15
+This example will return the first occurrence of 'ow' in the string. It will match on the 'ow' in the word 'shows'.
+
+We could change the starting position of the search so that we perform the search starting from the middle of the string.
+
+For example:
+
+SELECT REGEXP_INSTR ('The example shows how to use the REGEXP_INSTR function', 'ow', 16, 1, 0, 'i')
+FROM dual;
+
+Result: 20
+
+This example will start the search for the pattern of 'ow' at position 16 in the string. In this case, it will skip over the first 15
+characters in the string before searching for the pattern.
+
+Now, let's look how we would use the REGEXP_INSTR function with a table column and search for multiple characters.
+
+For example:
+
+SELECT REGEXP_INSTR (other_comments, 'the', 1, 1, 0, 'i')
+FROM contacts;
+In this example, we are going to search for the pattern in the other_comments field in the contacts table.
+
+Example - Match on more than one alternative
+The next example that we will look at involves using the | pattern. The | pattern is used like an "OR" to specify more than one alternative.
+
+For example:
+
+SELECT REGEXP_INSTR ('Anderson', 'a|e|i|o|u')
+FROM dual;
+
+Result: 4
+This example will return 4 because it is searching for the first vowel (a, e, i, o, or u) in the string. Since we did not specify a match_parameter value, the REGEXP_INSTR function will perform
+a case-sensitive search which means that the 'A' in 'Anderson' will not be matched.
+
+We could modify our query as follows to perform a case-insensitive search as follows:
+
+SELECT REGEXP_INSTR ('Anderson', 'a|e|i|o|u', 1, 1, 0, 'i')
+FROM dual;
+
+Result: 1
+Now because we have provide a match_parameter of 'i', the query will return 1 as the result. This time,
+the 'A' in 'Anderson' will be found as a match.
+
+Example - Match on nth_occurrence
+The next example that we will look at involves the nth_occurrence parameter. The nth_occurrence parameter allows you to select which occurrence of the pattern you wish to return the position of.
+
+First Occurrence
+Let's look at how to find the first occurrence of a pattern in a string.
+
+For example:
+
+SELECT REGEXP_INSTR ('TechOnTheNet', 'a|e|i|o|u', 1, 1, 0, 'i')
+FROM dual;
+
+Result: 2
+This example will return 2 because it is searching for the first occurrence of a vowel (a, e, i, o, or u) in the string.
+
+Second Occurrence
+Next, we will search for the second occurrence of a pattern in a string.
+
+For example:
+
+SELECT REGEXP_INSTR ('TechOnTheNet', 'a|e|i|o|u', 1, 2, 0, 'i')
+FROM dual;
+
+Result: 5
+This example will return 5 because it is searching for the second occurrence of a vowel (a, e, i, o, or u) in the string.
+
+Third Occurrence
+For example:
+
+SELECT REGEXP_INSTR ('TechOnTheNet', 'a|e|i|o|u', 1, 3, 0, 'i')
+FROM dual;
+
+Result: 9
+This example will return 9 because it is searching for the third occurrence of a vowel (a, e, i, o, or u) in the string.
+
+Example - return_option parameter
+Finally, let's look at how the return_option parameter affects our results.
+
+For example:
+
+SELECT REGEXP_INSTR ('TechOnTheNet', 'The', 1, 1, 0, 'i')
+FROM dual;
+
+Result: 7
+In this basic example, we are searching for a pattern in a string and the search is case-insensitive. We have specified the return_option parameter as 0 which means the position of the first character of the pattern will be returned.
+
+Now, let's change the return_option parameter to 1 and see what happens.
+
+For example:
+
+SELECT REGEXP_INSTR ('TechOnTheNet', 'The', 1, 1, 1, 'i')
+FROM dual;
+
+Result: 10
+A return_option parameter of 1 tells the REGEXP_INSTR function to return the position of the character following the matched pattern. 
+In this example, the function will return 10.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+Regexp_count:REGEXP_COUNT function counts the number of times that a pattern occurs in a string.
+~~~~~~~~~~~~
+syntax:
+~~~~~~
+REGEXP_COUNT( string, pattern [, start_position [, match_parameter ] ] )
+
+Returns
+The REGEXP_COUNT function returns a numeric value.
+
+Note
+If there are conflicting values provided for match_parameter, the REGEXP_COUNT function will use the last value.
+If you omit the match_behavior parameter, the REGEXP_COUNT function will use the NLS_SORT parameter to determine if it should use a case-sensitive search, it will assume that string is a single line, and assume the period character to match any character (not the newline character).
+If the REGEXP_COUNT function does not find any occurrence of pattern, it will return 0.
+
+Example - Match on Single Character
+Let's start by looking at the simplest case. Let's count the number of times the character 't' appears in a string.
+
+For example:
+
+SELECT REGEXP_COUNT ('TechOnTheNet is a great resource', 't')
+FROM dual;
+
+Result: 2
+This example will return 2 because it is counting the number of occurrences of 't' in the string. Since we did not specify a match_parameter value,
+the REGEXP_COUNT function will perform a case-sensitive search which means that the 'T' characters will not be included in the count.
+
+If we wanted to include both 't' and 'T' in our results and perform a case-insensitive search, we could modify our query as follows:
+
+SELECT REGEXP_COUNT ('TechOnTheNet is a great resource', 't', 1, 'i')
+FROM dual;
+
+Result: 4
+Now because we have provide a start_position of 1 and a match_parameter of 'i', the query will return 4 as the result.
+This time, both 't' and 'T' values would be included in the count.
+
+Example - Match on Multiple Characters
+Let's look next at how we would use the REGEXP_COUNT function to match on a multi-character pattern.
+
+For example:
+
+SELECT REGEXP_COUNT ('The example shows how to use the REGEXP_COUNT function', 'the', 1, 'i')
+FROM dual;
+
+Result: 2
+This example will return the number of times that the word 'the' appears in the string. It will perform a case-insensitive search so it will return 2.
+
+For example:
+
+SELECT REGEXP_COUNT ('The example shows how to use the REGEXP_COUNT function', 'the', 4, 'i')
+FROM dual;
+
+Result: 1
+This example will return the number of times that the word 'the' appears in the string starting from position 4. In this case, it will return 1 because it will skip over the first 3 characters in the string before searching for the pattern.
+
+Now, let's look how we would use the REGEXP_COUNT function with a table column and search for multiple characters.
+
+Example - Match on more than one alternative
+The next example that we will look at involves using the | pattern. The | pattern is used like an "OR" to specify more than one alternative.
+
+For example:
+
+SELECT REGEXP_COUNT ('Anderson', 'a|e|i|o|u')
+FROM dual;
+
+Result: 2
+This example will return 2 because it is counting the number of vowels (a, e, i, o, or u) in the string 'Anderson'. Since we did not specify a match_parameter value, the REGEXP_COUNT function will perform a case-sensitive search which means that the 'A' in 'Anderson' will not be counted.
+
+We could modify our query as follows to perform a case-insensitive search as follows:
+
+SELECT REGEXP_COUNT ('Anderson', 'a|e|i|o|u', 1, 'i')
+FROM dual;
+
+Result: 3
+
+Now because we have provide a start_position of 1 and a match_parameter of 'i', the query will return 3 as the result.
+This time, the 'A' in 'Anderson' will be included in the count.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Regexp_replace:REGEXP_REPLACE function is an extension of the REPLACE function. This function, introduced in Oracle 10g, will allow you to replace a 
+~~~~~~~~~~~~~~
+sequence of characters in a string with another set of characters using regular expression pattern matching.
+
+syntax:
+~~~~~~
+REGEXP_REPLACE( string, pattern [, replacement_string [, start_position [, nth_appearance [, match_parameter ] ] ] ] )
+
+Example - Match on First Word
+Let's start by using the REGEXP_REPLACE function to replace the first word in a string.
+
+For example:
+
+SELECT REGEXP_REPLACE ('TechOnTheNet is a great resource', '^(\S*)', 'CheckYourMath')
+FROM dual;
+
+select regexp_replace('TechonTheNet is a great resource','')
+
+Result: 'CheckYourMath is a great resource'
+This example will return 'CheckYourMath is a great resource' because it will start the match at the beginning of the string as
+specified by ^ and then find the first word as specified by (\S*).The function will then replace this first word with 'CheckYourMath'.
+
+Example - Match on Digit Characters
+Let's look next at how we would use the REGEXP_REPLACE function to match on a single digit character pattern.
+
+For example:
+
+SELECT REGEXP_REPLACE ('2, 5, and 10 are numbers in this example', '\d', '#')
+FROM dual;
+
+Result: '#, #, and ## are numbers in this example'
+This example will replace all numeric digits in the string as specified by \d. It will replace the occurrences with a # character.
+
+We could change our pattern to search for only two-digit numbers.
+
+For example:
+
+SELECT REGEXP_REPLACE ('2, 5, and 10 are numbers in this example', '(\d)(\d)', '#')
+FROM dual;
+
+Result: '2, 5, and # are numbers in this example'
+This example will replace a number that has two digits side-by-side as specified by (\d)(\d). In this case, it will skip over the 2 and 5 numeric 
+values and replace 10 with a # character.
+
+Now, let's look how we would use the REGEXP_REPLACE function with a table column to replace two digit numbers.
+
+Example - Match on more than one alternative
+The next example that we will look at involves using the | pattern. The | pattern is used like an "OR" to specify more than one alternative.
+
+For example:
+
+SELECT REGEXP_REPLACE ('Anderson', 'a|e|i|o|u', 'G')
+FROM dual;
+
+Result: 'AndGrsGn'
+This example will return 'AndGrsGn' because it is searching for the first vowel (a, e, i, o, or u) in the string. Since we did not specify a match_parameter value, the REGEXP_REPLACE function will perform a case-sensitive search which means that the 'A' in 'Anderson' will not be matched.
+
+We could modify our query as follows to perform a case-insensitive search as follows:
+
+SELECT REGEXP_REPLACE ('Anderson', 'a|e|i|o|u', 'G', 1, 0, 'i')
+FROM dual;
+
+Result: 'GndGrsGn'
+Now because we have provide a match_parameter of 'i', the query will replace 'A' in the string. This time, the 'A' in 'Anderson' will be found as a match. 
+Notice also that we specified 0 as the 5th parameter so that all occurrences would be replaced.
+
+Example - Match on nth_occurrence
+The next example that we will look at involves the nth_occurrence parameter. The nth_occurrence parameter allows you to select which occurrence of the pattern you wish to replace in the string.
+
+First Occurrence
+Let's look at how to replace the first occurrence of a pattern in a string.
+
+For example:
+SELECT REGEXP_REPLACE ('TechOnTheNet', 'a|e|i|o|u', 'Z', 1, 1, 'i')
+FROM dual;
+
+Result: 'TZchOnTheNet'
+This example will replace the second character ('e') in 'TechOnTheNet' because it is replacing the first occurrence of a vowel (a, e, i, o, or u) in the string.
+
+Second Occurrence
+Next, we will extract for the second occurrence of a pattern in a string.
+
+For example:
+
+SELECT REGEXP_REPLACE ('TechOnTheNet', 'a|e|i|o|u', 'Z', 1, 2, 'i')
+FROM dual;
+
+Result: 'TechZnTheNet'
+This example will replace the fifth character ('O') in 'TechOnTheNet' because it is replacing the second occurrence of a vowel (a, e, i, o, or u) in the string.
+
+Third Occurrence
+For example:
+
+SELECT REGEXP_REPLACE ('TechOnTheNet', 'a|e|i|o|u', 'Z', 1, 3, 'i')
+FROM dual;
+
+Result: 'TechOnThZNet'
+This example will replace the ninth character ('e') in 'TechOnTheNet' 
+because it is replacing the third occurrence of a vowel (a, e, i, o, or u) in the string.
+
+select phone_number,regexp_replace(phone_number,'(\d{3}).(\d{3}).(\d{3,4})','\1-(\2)-(\3)') from hr.employees
+
+select phone_number from hr.employees
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Listagg:LISTAGG function concatenates values of the measure_column for each GROUP based on the order_by_clause.
+~~~~~~~
+syntax:
+~~~~~~
+LISTAGG (measure_column [, 'delimiter'])
+  WITHIN GROUP (order_by_clause) [OVER (query_partition_clause)]
+  
+SELECT LISTAGG(product_name, ', ') WITHIN GROUP (ORDER BY product_name) "Product_Listing"
+FROM products;
+You would get the following results:
+
+Product_Listing
+Apples, Bananas, Oranges, Pears
+
+In this example, the results of the LISTAGG function are output in a single field with the values comma delimited.
+
+You can change the ORDER BY clause to use the DESC keyword and change the SELECT statement as follows:
+
+SELECT LISTAGG(product_name, ', ') WITHIN GROUP (ORDER BY product_name DESC) "Product_Listing"
+FROM products;
+This would give the following results:
+
+Product_Listing
+Pears, Oranges, Bananas, Apples
+
+You could change the delimiter from a comma to a semi-colon as follows:
+
+SELECT LISTAGG(product_name, '; ') WITHIN GROUP (ORDER BY product_name DESC) "Product_Listing"
+FROM products;
+This would change your results as follows:
+
+Product_Listing
+Pears; Oranges; Bananas; Apples
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+Decode:DECODE function has the functionality of an IF-THEN-ELSE statement.
+~~~~~~
+syntax:
+~~~~~~
+DECODE( expression , search , result [, search , result]... [, default] )
+
+Parameters or Arguments
+expression
+The value to compare. It is automatically converted to the data type of the first search value before comparing.
+search
+The value that is compared against expression. All search values are automatically converted to the data type of the first search value before comparing.
+result
+The value returned, if expression is equal to search.
+default
+Optional. If no matches are found, the DECODE function will return default. If default is omitted,
+then the DECODE function will return NULL (if no matches are found).
+
+Returns
+The DECODE function returns a value that is the same datatype as the first result in the list.
+If the first result is NULL, then the return value is converted to VARCHAR2.
+If the first result has a datatype of CHAR, then the return value is converted to VARCHAR2.
+If no matches are found, the default value is returned.
+If default is omitted and no matches are found, then NULL is returned.
+
+SELECT supplier_name,
+DECODE(supplier_id, 10000, 'IBM',
+                    10001, 'Microsoft',
+                    10002, 'Hewlett Packard',
+                    'Gateway') result
+FROM suppliers;
+
+The above DECODE statement is equivalent to the following IF-THEN-ELSE statement:
+
+IF supplier_id = 10000 THEN
+   result := 'IBM';
+
+ELSIF supplier_id = 10001 THEN
+   result := 'Microsoft';
+
+ELSIF supplier_id = 10002 THEN
+   result := 'Hewlett Packard';
+
+ELSE
+   result := 'Gateway';
+
+END IF;
+
+select * from students_marks
+
+select id,name,marks,decode(result,'p','pass','f','fail','NA') from students_marks
+
+Case:CASE statement has the functionality of an IF-THEN-ELSE statement. Starting in Oracle 9i, you can use the CASE statement within a SQL statement.
+~~~~
+syntax:
+~~~~~~
+CASE [ expression ]
+
+   WHEN condition_1 THEN result_1
+   WHEN condition_2 THEN result_2
+   ...
+   WHEN condition_n THEN result_n
+
+   ELSE result
+
+END
+
+Parameters or Arguments
+expression
+Optional. It is the value that you are comparing to the list of conditions. (ie: condition_1, condition_2, ... condition_n)
+condition_1, condition_2, ... condition_n
+The conditions that must all be the same datatype. The conditions are evaluated in the order listed. Once a condition is found to be true, the CASE statement will return the result and not evaluate the conditions any further.
+result_1, result_2, ... result_n
+Results that must all be the same datatype. This is the value returned once a condition is found to be true.
+Returns
+The CASE statement returns any datatype such as a string, numeric, date, etc. (BUT all results must be the same datatype in the CASE statement.)
+If all conditions are not the same datatype, an ORA-00932 error will be returned.
+If all results are not the same datatype, an ORA-00932 error will be returned.
+If no condition is found to be true, then the CASE statement will return the value in the ELSE clause.
+If the ELSE clause is omitted and no condition is found to be true, then the CASE statement will return NULL.
+
+Note
+You can have up to 255 comparisons in a CASE statement. Each WHEN ... THEN clause is considered 2 comparisons.
+
+Example
+The CASE statement can be used in Oracle/PLSQL.
+
+You could use the CASE statement in a SQL statement as follows: (includes the expression clause)
+
+SELECT table_name,
+CASE owner
+  WHEN 'SYS' THEN 'The owner is SYS'
+  WHEN 'SYSTEM' THEN 'The owner is SYSTEM'
+  ELSE 'The owner is another value'
+END
+FROM all_tables;
+Or you could write the SQL statement using the CASE statement like this: (omits the expression clause)
+
+SELECT table_name,
+CASE
+  WHEN owner='SYS' THEN 'The owner is SYS'
+  WHEN owner='SYSTEM' THEN 'The owner is SYSTEM'
+  ELSE 'The owner is another value'
+END
+FROM all_tables;
+
+The above two CASE statements are equivalent to the following IF-THEN-ELSE statement:
+
+IF owner = 'SYS' THEN
+   result := 'The owner is SYS';
+
+ELSIF owner = 'SYSTEM' THEN
+   result := 'The owner is SYSTEM'';
+
+ELSE
+   result := 'The owner is another value';
+
+END IF;
+The CASE statement will compare each owner value, one by one.
+
+One thing to note is that the ELSE clause within the CASE statement is optional. You could have omitted it. 
+Let's look at the SQL statement above with the ELSE clause omitted.
+
+SELECT table_name,
+CASE owner
+  WHEN 'SYS' THEN 'The owner is SYS'
+  WHEN 'SYSTEM' THEN 'The owner is SYSTEM'
+END
+FROM all_tables;
+With the ELSE clause omitted, if no condition was found to be true, the CASE statement would return NULL.
+
+Comparing 2 Conditions
+Here is an example that demonstrates how to use the CASE statement to compare different conditions:
+
+SELECT
+CASE
+  WHEN a < b THEN 'hello'
+  WHEN d < e THEN 'goodbye'
+END
+FROM suppliers;
+
+Frequently Asked Questions
+Question: Can you create a CASE statement that evaluates two different fields? I want to return a value based on the combinations in two different fields.
+
+Answer: Yes, below is an example of a case statement that evaluates two different fields.
+
+SELECT supplier_id,
+CASE
+  WHEN supplier_name = 'IBM' and supplier_type = 'Hardware' THEN 'North office'
+  WHEN supplier_name = 'IBM' and supplier_type = 'Software' THEN 'South office'
+END
+FROM suppliers;
+
+select id,name,marks,case when result='p' then 'pass'
+                          when result='f' then 'fail'
+                          else 'NA' end as result from students_marks
+                          
+select id,name,marks,result,case when result='p' and marks between 75 and 100 then 'A'
+                                 when result='p' and marks between 60 and 74 then 'B'
+                                 when result='p' and marks between 45 and 59 then 'C'
+                                 when result='p' and marks between 35 and 44 then'D'
+                                 when result='f' and marks <35 then 'F'
+                                 end as grade from students_marks
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+TO_CHAR:TO_CHAR function converts a number or date to a string.
+~~~~~~~
+
+syntax:
+~~~~~~~
+TO_CHAR( value [, format_mask] [, nls_language] )
+
+Parameters or Arguments
+value
+A number or date that will be converted to a string.
+format_mask
+Optional. This is the format that will be used to convert value to a string.
+nls_language
+Optional. This is the nls language used to convert value to a string.
+Returns
+The TO_CHAR function returns a string value.
+
+Examples with Numbers
+For example:
+
+The following are number examples for the TO_CHAR function.
+
+select TO_CHAR(1210.73, '9999.9') from dual
+Result: ' 1210.7'
+
+select TO_CHAR(-1210.73, '9999.9') from dual
+Result: '-1210.7'
+
+select TO_CHAR(1210.73, '9,999.99') from dual
+Result: ' 1,210.73'
+
+select TO_CHAR(1210.73, '$9,999.00') from dual
+Result: ' $1,210.73'
+
+select TO_CHAR(21, '000099') from dual
+Result: ' 000021'
+
+Examples with Dates
+The following is a list of valid parameters when the TO_CHAR function is used to convert a date to a string. These parameters can be used in many combinations.
+
+Parameter	Explanation
+YEAR	Year, spelled out
+YYYY	4-digit year
+YYY
+YY
+Y	Last 3, 2, or 1 digit(s) of year.
+IYY
+IY
+I	Last 3, 2, or 1 digit(s) of ISO year.
+IYYY	4-digit year based on the ISO standard
+Q	Quarter of year (1, 2, 3, 4; JAN-MAR = 1).
+MM	Month (01-12; JAN = 01).
+MON	Abbreviated name of month.
+MONTH	Name of month, padded with blanks to length of 9 characters.
+RM	Roman numeral month (I-XII; JAN = I).
+WW	Week of year (1-53) where week 1 starts on the first day of the year and continues to the seventh day of the year.
+W	Week of month (1-5) where week 1 starts on the first day of the month and ends on the seventh.
+IW	Week of year (1-52 or 1-53) based on the ISO standard.
+D	Day of week (1-7).
+DAY	Name of day.
+DD	Day of month (1-31).
+DDD	Day of year (1-366).
+DY	Abbreviated name of day.
+J	Julian day; the number of days since January 1, 4712 BC.
+HH	Hour of day (1-12).
+HH12	Hour of day (1-12).
+HH24	Hour of day (0-23).
+MI	Minute (0-59).
+SS	Second (0-59).
+SSSSS	Seconds past midnight (0-86399).
+FF	Fractional seconds.
+
+select TO_CHAR(sysdate, 'yyyy/mm/dd') from dual
+Result: '2003/07/09'
+
+select TO_CHAR(sysdate, 'Month DD, YYYY') from dual
+Result: 'July 09, 2003'
+
+select TO_CHAR(sysdate, 'FMMonth DD, YYYY') from dual
+Result: 'July 9, 2003'
+
+select TO_CHAR(sysdate, 'MON DDth, YYYY') from dual
+Result: 'JUL 09TH, 2003'
+
+select TO_CHAR(sysdate, 'FMMON DDth, YYYY') from dual
+Result: 'JUL 9TH, 2003'
+
+select TO_CHAR(sysdate, 'FMMon ddth, YYYY') from dual
+Result: 'Jul 9th, 2003'
+
+You will notice that in some TO_CHAR function examples, the format_mask parameter begins with "FM". This means that zeros and blanks are suppressed. This can be seen in the examples below.
+
+TO_CHAR(sysdate, 'FMMonth DD, YYYY')
+Result: 'July 9, 2003'
+
+TO_CHAR(sysdate, 'FMMON DDth, YYYY')
+Result: 'JUL 9TH, 2003'
+
+TO_CHAR(sysdate, 'FMMon ddth, YYYY')
+Result: 'Jul 9th, 2003'
+
+Frequently Asked Questions
+Question: Why doesn't this sort the days of the week in order?
+
+SELECT ename, hiredate, TO_CHAR((hiredate),'fmDay') "Day"
+FROM emp
+ORDER BY "Day";
+Answer: In the above SQL, the fmDay format mask used in the TO_CHAR function will return the name of the Day and not the numeric value of the day.
+
+To sort the days of the week in order, you need to return the numeric value of the day by using the fmD format mask as follows:
+
+SELECT ename, hiredate, TO_CHAR((hiredate),'fmD') "Day"
+FROM emp
+ORDER BY "Day";
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+TO_NUMBER:TO_NUMBER function converts a string to a number.
+~~~~~~~~~
+
+syntax:
+~~~~~~
+TO_NUMBER( string1 [, format_mask] [, nls_language] )
+Parameters or Arguments
+string1
+The string that will be converted to a number.
+format_mask
+Optional. This is the format that will be used to convert string1 to a number.
+nls_language
+Optional. This is the nls language used to convert string1 to a number.
+Returns
+The TO_NUMBER function returns a numeric value.
+
+Example
+Let's look at some Oracle TO_NUMBER function examples and explore how to use the TO_NUMBER function in Oracle/PLSQL.
+
+For example:
+
+select TO_NUMBER('1210.73', '9999.99') from dual
+Result: 1210.73
+
+select TO_NUMBER('546', '999') from dual
+Result: 546
+
+select TO_NUMBER('23', '99') from dual
+Result: 23
+
+Since the format_mask and nls_language parameters are optional, you can simply convert a text string to a numeric value as follows:
+
+select TO_NUMBER('1210.73') from dual
+Result: 1210.73
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+TO_DATE:TO_DATE function converts a string to a date.
+~~~~~~~
+
+syntax:
+~~~~~~
+TO_DATE( string1 [, format_mask] [, nls_language] )
+Parameters or Arguments
+string1
+The string that will be converted to a date.
+format_mask
+Optional. This is the format that will be used to convert string1 to a date. It can be one or a combination of the following values:
+
+Parameter	Explanation
+YEAR	Year, spelled out
+YYYY	4-digit year
+YYY
+YY
+Y	Last 3, 2, or 1 digit(s) of year.
+IYY
+IY
+I	Last 3, 2, or 1 digit(s) of ISO year.
+IYYY	4-digit year based on the ISO standard
+RRRR	Accepts a 2-digit year and returns a 4-digit year.
+A value between 0-49 will return a 20xx year.
+A value between 50-99 will return a 19xx year.
+Q	Quarter of year (1, 2, 3, 4; JAN-MAR = 1).
+MM	Month (01-12; JAN = 01).
+MON	Abbreviated name of month.
+MONTH	Name of month, padded with blanks to length of 9 characters.
+RM	Roman numeral month (I-XII; JAN = I).
+WW	Week of year (1-53) where week 1 starts on the first day of the year and continues to the seventh day of the year.
+W	Week of month (1-5) where week 1 starts on the first day of the month and ends on the seventh.
+IW	Week of year (1-52 or 1-53) based on the ISO standard.
+D	Day of week (1-7).
+DAY	Name of day.
+DD	Day of month (1-31).
+DDD	Day of year (1-366).
+DY	Abbreviated name of day.
+J	Julian day; the number of days since January 1, 4712 BC.
+HH	Hour of day (1-12).
+HH12	Hour of day (1-12).
+HH24	Hour of day (0-23).
+MI	Minute (0-59).
+SS	Second (0-59).
+SSSSS	Seconds past midnight (0-86399).
+AM, A.M., PM, or P.M.	Meridian indicator
+AD or A.D	AD indicator
+BC or B.C.	BC indicator
+TZD	Daylight savings information. For example, 'PST'
+TZH	Time zone hour.
+TZM	Time zone minute.
+TZR	Time zone region.
+
+nls_language
+Optional. This is the nls language used to convert string1 to a date.
+Returns
+The TO_DATE function returns a date value.
+
+Example
+Let's look at some Oracle TO_DATE function examples and explore how to use the TO_DATE function in Oracle/PLSQL.
+
+For example:
+
+select TO_DATE('2003/07/09', 'yyyy/mm/dd') from dual
+Result: date value of July 9, 2003
+
+select TO_DATE('070903', 'MMDDYY') from dual
+Result: date value of July 9, 2003
+
+select TO_DATE('20020315', 'yyyymmdd') from dual
+Result: date value of Mar 15, 2002
+
+SELECT TO_DATE('2015/05/15 8:30:25', 'YYYY/MM/DD HH:MI:SS')
+FROM dual;
+This would convert the string value of 2015/05/15 8:30:25 to a date value.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+SUBQUERY:In Oracle, a subquery is a query within a query. You can create subqueries within your SQL statements.
+~~~~~~~~
+These subqueries can reside in the WHERE clause, the FROM clause, or the SELECT clause.
+
+Types of subqueries:
+~~~~~~~~~~~~~~~~~~~~
+a)scalar subquery:a scalar sub query is a query which always return a single row and single column.
+  ~~~~~~~~~~~~~~~
+  eg:
+  ~~
+--find the employees who is earning the salary more than the average salary of all employees
+
+  select emp_id,emp_name,dept_name,salary from hr.emp where salary>(select avg(salary) from hr.emp)--here we have written the subquery within the where caluse.
+  
+   in this example the inner query returns one value and the outer query takes that value as input. 
+  
+  select t1.emp_id,t1.emp_name,t1.dept_name,t1.salary from hr.emp t1--here we have written the subquery with join
+  join(select avg(salary)avg_sal from hr.emp)t2
+  on t1.salary>t2.avg_sal
+   
+b)multiple row subquery:query that returns multiple columns and multiple rows or the query that returns single column and multiple rows
+  ~~~~~~~~~~~~~~~~~~~~~
+ find the employees who earns highest salary in each department
+ 
+select * from hr. emp where (dept_name,salary) in (select dept_name,max(salary) from hr.emp group by dept_name)--by using subquery,here we used in operator
+because the outer query returing multiple outputs
+or 
+select t1.* from hr.emp t1
+join(select emp_id,emp_name,dept_name,salary,max(salary) over(partition by dept_name)maz_salary from hr.emp)t2
+on t1.emp_id=t2.emp_id and t1.salary=t2.maz_salary
+
+ 
+select max(salary),dept_name from hr.emp group by dept_name
+ select * from hr.emp
+  
+c)corelated subquery
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Intersect operator:INTERSECT operator is used to return the results of 2 or more SELECT statements. However, it only returns the rows selected by
+~~~~~~~~~~~~~~~~~~
+all queries or data sets. If a record exists in one query and not in the other, it will be omitted from the INTERSECT results.
+
+Syntax:
+~~~~~~
+The syntax for the INTERSECT operator in Oracle/PLSQL is:
+
+SELECT expression1, expression2, ... expression_n
+FROM tables
+[WHERE conditions]
+INTERSECT
+SELECT expression1, expression2, ... expression_n
+FROM tables
+[WHERE conditions];
+Parameters or Arguments
+expression1, expression2, ... expression_n
+The columns or calculations that you wish to retrieve.
+tables
+The tables that you wish to retrieve records from. There must be at least one table listed in the FROM clause.
+WHERE conditions
+Optional. The conditions that must be met for the records to be selected.
+Note
+There must be same number of expressions in both SELECT statements and have similar data types.
+
+
+Example - With Single Expression
+The following is an Oracle INTERSECT example that returns one field with the same data type:
+
+SELECT supplier_id
+FROM suppliers
+INTERSECT
+SELECT supplier_id
+FROM orders;
+In this INTERSECT example, if a supplier_id appeared in both the suppliers and orders table, it would appear in your result set.
+
+Now, let's complicate our example further by adding WHERE conditions to the INTERSECT query.
+
+SELECT supplier_id
+FROM suppliers
+WHERE supplier_id <= 99
+INTERSECT
+SELECT supplier_id
+FROM orders
+WHERE quantity > 25;
+In this example, the WHERE clauses have been added to each of the datasets. The first dataset has been filtered so that only records from the suppliers table where the supplier_id is less than or equal to 99 are returned. The second dataset has been filtered so that only records from the orders table are returned where the quantity is greater than 25.
+
+Example - With Multiple Expressions
+Next, let's look at an example of how to use the INTERSECT operator in Oracle to return more than one column.
+
+For example:
+
+SELECT contact_id, last_name, first_name
+FROM contacts
+WHERE first_name <> 'John'
+INTERSECT
+SELECT customer_id, last_name, first_name
+FROM customers
+WHERE customer_id >= 89;
+In this INTERSECT example, the query will return the records from the contacts table where the contact_id, last_name, and first_name values match the customer_id, last_name, and first_name value from the customers table.
+
+There are WHERE conditions on each data set to further filter the results so that only records from the contacts are returned where the first_name is not John. The records from the customers table are returned where the customer_id is greater than or equal to 89.
+
+Example - Using ORDER BY
+The following is an INTERSECT example that uses an ORDER BY clause:
+
+SELECT supplier_id, supplier_name
+FROM suppliers
+WHERE supplier_id > 500
+INTERSECT
+SELECT company_id, company_name
+FROM companies
+WHERE company_name in ( 'Apple', 'Microsoft', 'Oracle' )
+ORDER BY 2;
+Since the column names are different between the two SELECT statements, it is more advantageous to reference the columns in the ORDER BY clause by their position in the result set. In this example, we've sorted the results by supplier_name / company_name in ascending order, as denoted by the ORDER BY 2.
+
+The supplier_name / company_name fields are in position #2 in the result set.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Except/minus operator:MINUS operator is used to return all rows in the first SELECT statement that are not returned by the second SELECT statement. 
+~~~~~~~~~~~~~~~~~~~~~
+Each SELECT statement will define a dataset. The MINUS operator will
+retrieve all records from the first dataset and then remove from the results all records from the second dataset.
+
+Syntax:
+~~~~~~
+The syntax for the MINUS operator in Oracle/PLSQL is:
+
+SELECT expression1, expression2, ... expression_n
+FROM tables
+[WHERE conditions]
+MINUS
+SELECT expression1, expression2, ... expression_n
+FROM tables
+[WHERE conditions];
+Parameters or Arguments
+expression1, expression2, ... expression_n
+The columns or calculations that you wish to retrieve.
+tables
+The tables that you wish to retrieve records from. There must be at least one table listed in the FROM clause.
+WHERE conditions
+Optional. The conditions that must be met for the records to be selected.
+
+Note:There must be same number of expressions in both SELECT statements and have similar data types.
+~~~~~
+
+Example - With Single Expression
+The following is an Oracle MINUS operator example that returns one field with the same data type:
+
+SELECT supplier_id
+FROM suppliers
+MINUS
+SELECT supplier_id
+FROM orders;
+This Oracle MINUS example returns all supplier_id values that are in the suppliers table and not in the orders table.
+What this means is that if a supplier_id value existed in the suppliers table and also existed in the orders table, the supplier_id value 
+would not appear in this result set.
+
+Example - Using ORDER BY
+The following is a MINUS operator example that uses an ORDER BY clause:
+
+SELECT supplier_id, supplier_name
+FROM suppliers
+WHERE state = 'Florida'
+MINUS
+SELECT company_id, company_name
+FROM companies
+WHERE company_id <= 400
+ORDER BY 2;
+In this MINUS example, since the column names are different between the two SELECT statements,
+it is more advantageous to reference the columns in the ORDER BY clause by their position in the result set. In this example, we've sorted the 
+results by supplier_name / company_name in ascending order, as denoted by the ORDER BY 2.
+
+The supplier_name / company_name fields are in position #2 in the result set.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Union operator: UNION operator is used to combine the result sets of 2 or more Oracle SELECT statements. It removes duplicate rows between the various SELECT statements.
+~~~~~~~~~~~~~~~
+Each SELECT statement within the UNION operator must have the same number of fields in the result sets with similar data types.
+
+SELECT expression1, expression2, ... expression_n
+FROM tables
+[WHERE conditions]
+UNION
+SELECT expression1, expression2, ... expression_n
+FROM tables
+[WHERE conditions];
+
+Parameters or Arguments
+expression1, expression2, expression_n
+The columns or calculations that you wish to retrieve.
+tables
+The tables that you wish to retrieve records from. There must be at least one table listed in the FROM clause.
+WHERE conditions
+Optional. The conditions that must be met for the records to be selected.
+Note
+There must be same number of expressions in both SELECT statements.
+
+Example - Returns single field
+The following is an example of the Oracle UNION operator that returns one field from multiple SELECT statements (and both fields have the same data type):
+
+SELECT supplier_id
+FROM suppliers
+UNION
+SELECT supplier_id
+FROM order_details;
+In this Oracle UNION operator example, if a supplier_id appeared in both the suppliers and order_details table, it would appear once in your result set. The Oracle UNION operator removes duplicates. If you do not wish to remove duplicates, try using the Oracle UNION ALL operator.
+
+Example - Using ORDER BY
+The Oracle UNION operator can use the ORDER BY clause to order the results of the query.
+
+For example:
+
+SELECT supplier_id, supplier_name
+FROM suppliers
+WHERE supplier_id <= 500
+UNION
+SELECT company_id, company_name
+FROM companies
+WHERE company_name = 'Apple'
+ORDER BY 2;
+In this Oracle UNION operator, since the column names are different between the two SELECT statements, it is more advantageous to reference the columns in the ORDER BY clause by their position in the result set. In this example, we've sorted the results by supplier_name / company_name in ascending order, as denoted by the ORDER BY 2.
+
+The supplier_name / company_name fields are in position #2 in the result set.
+
+Frequently Asked Questions
+Question: I need to compare two dates and return the count of a field based on the date values. For example, I have a date field in a table called last updated date. I have to check if trunc(last_updated_date >= trunc(sysdate - 13).
+
+Answer: Since you are using the Oracle COUNT function which is an aggregate function, we'd recommend using the Oracle UNION operator. For example, you could try the following:
+
+SELECT a.code AS Code, a.name AS Name, COUNT(b.Ncode)
+FROM cdmaster a, nmmaster b
+WHERE a.code = b.code
+AND a.status = 1
+AND b.status = 1
+AND b.Ncode <> 'a10'
+AND TRUNC(a.last_updated_date) <= TRUNC(sysdate - 13)
+GROUP BY a.code, a.name
+UNION
+SELECT a.code AS Code, a.name AS Name, COUNT(b.Ncode)
+FROM cdmaster a, nmmaster b
+WHERE a.code = b.code
+AND a.status = 1
+AND b.status = 1
+AND b.Ncode <> 'a10'
+AND TRUNC(a.last_updated_date) > TRUNC(sysdate - 13)
+GROUP BY a.code, a.name;
+
+The Oracle UNION operator allows you to perform a count based on one set of criteria.
+
+TRUNC(a.last_updated_date) <= TRUNC(sysdate - 13)
+As well as perform a count based on another set of criteria.
+
+TRUNC(a.last_updated_date) > TRUNC(sysdate - 13)
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+Pivot:PIVOT clause allows you to write a cross-tabulation query starting in Oracle 11g. 
+~~~~~
+This means that you can aggregate your results and rotate rows into columns.
+
+Syntax
+The syntax for the PIVOT clause in Oracle/PLSQL is:
+
+SELECT * FROM
+(
+  SELECT column1, column2
+  FROM tables
+  WHERE conditions
+)
+PIVOT 
+(
+  aggregate_function(column2)
+  FOR column2
+  IN ( expr1, expr2, ... expr_n) | subquery
+)
+ORDER BY expression [ ASC | DESC ];
+
+Parameters or Arguments
+aggregate_function
+It can be a function such as SUM, COUNT, MIN, MAX, or AVG functions.
+IN ( expr1, expr2, ... expr_n )
+A list of values for column2 to pivot into headings in the cross-tabulation query results.
+subquery
+It can be used instead of a list of values. In this case, the results of the 
+subquery would be used to determine the values for column2 to pivot into headings in the cross-tabulation query results.
+
+CREATE TABLE orders
+( order_id integer NOT NULL,
+  customer_ref varchar2(50) NOT NULL,
+  order_date date,
+  product_id integer,
+  quantity integer,
+  CONSTRAINT orders_pk PRIMARY KEY (order_id)
+);
+
+insert into orders values(5001,'smith',10);
+insert into orders values(5002,'smith',20);
+insert into orders values(5003,'anderson',30);
+insert into orders values(5004,'anderson',40);
+insert into orders values(5005,'jones',10);
+insert into orders values(5006,'jones',20);
+insert into orders values(5007,'smith',20);
+insert into orders values(5008,'smith',10);
+insert into orders values(5008,'smith',20);
+
+select * from orders
+
+SELECT * FROM
+(
+  SELECT customer_ref, product_id
+  FROM orders
+)
+PIVOT
+(
+  COUNT(product_id)
+  FOR product_id IN (10, 20, 30)
+)
+ORDER BY customer_ref;
+
+select * from (select customer_ref,product_id from orders) pivot(count(product_id)for product_id in (10,20,30,40))order by customer_ref;
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Distinct:DISTINCT clause is used to remove duplicates from the result set. The DISTINCT clause can only be used with SELECT statements.
+~~~~~~~~
+
+Syntax:
+~~~~~~~
+SELECT DISTINCT expressions
+FROM tables
+[WHERE conditions];
+
+Parameters or Arguments
+expressions
+The columns or calculations that you wish to retrieve.
+tables
+The tables that you wish to retrieve records from. There must be at least one table listed in the FROM clause.
+WHERE conditions
+Optional. The conditions that must be met for the records to be selected.
+Note
+When only one expression is provided in the DISTINCT clause, the query will return the unique values for that expression.
+When more than one expression is provided in the DISTINCT clause, the query will retrieve unique combinations for the expressions listed.
+In Oracle, the DISTINCT clause doesn't ignore NULL values. So when using the DISTINCT clause in your SQL statement, your
+result set will include NULL as a distinct value.
+
+Example - With Single Expression
+Let's look at the simplest Oracle DISTINCT clause example. We can use the Oracle DISTINCT clause to return a single field that removes the duplicates from the result set.
+
+For example:
+
+SELECT DISTINCT state
+FROM customers
+WHERE last_name = 'Smith';
+This Oracle DISTINCT example would return all unique state values from the customers table where the customer's last_name is 'Smith'.
+
+Example - With Multiple Expressions
+Let's look at how you might use the Oracle DISTINCT clause to remove duplicates from more than one field in your SELECT statement.
+
+For example:
+SELECT DISTINCT city, state
+FROM customers
+WHERE total_orders > 10
+ORDER BY city;
+This Oracle DISTINCT clause example would return each unique city and state combination from the customers table where the total_orders is greater than 10. The results are sorted in ascending order by city.
+
+In this case, the DISTINCT applies to each field listed after the DISTINCT keyword, and therefore returns distinct combinations.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+Exists:EXISTS condition is used in combination with a subquery and is considered "to be met" if the subquery returns at least one row. 
+~~~~~~
+It can be used in a SELECT, INSERT, UPDATE, or DELETE statement.
+
+Syntax
+The syntax for the EXISTS condition in Oracle/PLSQL is:
+
+WHERE EXISTS ( subquery );
+Parameters or Arguments
+subquery
+The subquery is a SELECT statement. If the subquery returns at least one record in its result set, the EXISTS clause will evaluate to true and 
+the EXISTS condition will be met.
+If the subquery does not return any records, the EXISTS clause will evaluate to false and the EXISTS condition will not be met.
+
+Note:Oracle SQL statements that use the Oracle EXISTS condition are very inefficient since the sub-query is RE-RUN for EVERY row in the
+~~~~
+outer query's table. There are more efficient ways to write most queries, that do not use the EXISTS condition.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
