@@ -1,0 +1,9 @@
+git init(to intialize that folder as git repository) 
+git add (to add to the staging)
+git restore --staged <file>...(to unstage the file)
+git commit -m(to add from staging to local repository)
+git push -u origin branch_name(to add to the global repository from the local repository)
+git checkout branch_name(to move from one branch to another branch)
+git checkout -b new_branch_name(to create the new branch)
+git clone path_name(to get the remote file into the local machine)
+
