@@ -1,0 +1,1410 @@
+ 4/12/22
+1.normalization ----- definition,uses
+2.implementation of normalization in powercenter
+3.how to pass parameters and varaiables in powercenter---------------
+4.implementation of static,dynamic and persistent cache in powercenter
+5.in depth use of facts and dimensions
+6.how to remove non-printable characters using expression transformation
+7.have to learn in depth about flat files
+8.decode and iif in depth
+9.regex replace
+10.change data capture in depth
+11.incremental incrementation------------
+12.sechudling workflows
+13.command task
+14.multiple sessions
+15.parameterisation of file
+16.debugger in designer
+18.concurrent mappings-----------------in depth
+19.what is instance
+information stored in database at any particular instance or moment of time is called database instance
+eg:x=3 the value of variable x at that particular moment of time i.e 3 here currently
+20.variable port in depth
+21.triggers in depth
+22.unix---------
+23.job control table
+24.select * from(select *,DENSE_RANK() over(partition by dept_name order by salary desc)as rnk from employee)x
+where x.rnk between 1 and 2-----top 2 max(salary) 
+25.indirect loading
+26.incremental aggregation
+27.pre sql and post sql
+28.scale,precision
+28.pmcmd in informatica
+29.
+select * from testdatabase2022.dbo.employee
+30.bitmap index-------------------
+31. dot.net in unix------------------------
+32.candidate key ---------------------------
+33.Concurrent Sessions and Workflows
+If possible, run sessions and workflows concurrently to improve performance.
+For example, if you load data into an analytic schema, where you have dimension and fact tables, load the dimensions concurrently.
+34.reusable transformation---------------
+35.SQL CHECK Constraint
+The CHECK constraint is used to limit the value range that can be placed in a column.
+
+If you define a CHECK constraint on a column it will allow only certain values for this column.
+
+If you define a CHECK constraint on a table it can limit the values in certain columns based on values in other columns in the row.
+
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CHECK (Age>=18)
+);
+
+To allow naming of a CHECK constraint, and for defining a CHECK constraint on multiple columns, use the following SQL syntax:
+
+MySQL / SQL Server / Oracle / MS Access:
+
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    City varchar(255),
+    CONSTRAINT CHK_Person CHECK (Age>=18 AND City='Sandnes')
+);
+To create a CHECK constraint on the "Age" column when the table is already created, use the following SQL:
+
+ALTER TABLE Persons
+ADD CHECK (Age>=18);
+
+To allow naming of a CHECK constraint, and for defining a CHECK constraint on multiple columns, use the following SQL syntax:
+
+ALTER TABLE Persons
+ADD CONSTRAINT CHK_PersonAge CHECK (Age>=18 AND City='Sandnes');
+
+To drop a CHECK constraint, use the following SQL:
+
+ALTER TABLE Persons
+DROP CONSTRAINT CHK_PersonAge;
+36.
+create table s_doj_details as select * from hr.student_joindate_src where 1=2
+37.alter table orcl_departments_table
+drop constraint PK__orcl_dep__C2232422B5D8A2A1---if there are any constraints(pk) defined on the target table we will drop that in pre-sql and create the constraint in post sql
+other wise we will get this kind of error
+Database driver error...
+Function Name : Prepare DPL
+SQL Stmt : INSERT INTO EMP_PARAMETERS_VARIABLES(EMP_NO,EMP_NAME,JOB,MGR,HIREDATE,SAL,COMM,DEPT_NO,BONUS_SAL,SET_MAX_VARIABLE,SET_MIN_VARIABLE,SET_COUNT,SET_VARIABLE)  VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+Oracle Fatal Error
+Database driver error...
+Function Name : Execute Multiple
+SQL Stmt : INSERT INTO EMP_PARAMETERS_VARIABLES(EMP_NO,EMP_NAME,JOB,MGR,HIREDATE,SAL,COMM,DEPT_NO,BONUS_SAL,SET_MAX_VARIABLE,SET_MIN_VARIABLE,SET_COUNT,SET_VARIABLE)  VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+Oracle Fatal Error
+
+alter table orcl_departments_table
+ADD CONSTRAINT pk_dept_id primary key (department_id);
+
+39.cmd indirect loading --dir /b C:\Informatica\9.6.1\server\infa_shared\SrcFiles\cmd\*.csv > C:\Informatica\9.6.1\server\infa_shared\SrcFiles\cmd\filename.txt
+40.select * into unique_records_tgt from infa.dbo.unique_duplicate_records where 1=2-----ms sql server
+   create table s_doj_details as select * from hr.student_joindate_src where 1=2---------oracle sql developer
+41.select substr(CurrentlyProcessedFileName,instr(CurrentlyProcessedFileName,'\',-1,1)+1
+)from (select 'C:\Informatica\9.6.1\server\infa_shared\SrcFiles\New folder\multiple_delimiters.txt'
+as CurrentlyProcessedFileName from dual)
+42.select * from all_indexes where table_name='employees'
+
+
+Message: SQ instance [SQ_EMP_SCD] SQL Query [SELECT EMP_SCD.EMP_ID, EMP_SCD.EMP_NAME, EMP_SCD.EMP_SALARY, EMP_SCD.EMP_LOC FROM EMP_SCD]
+
+43.select x.employee_id,x.first_name,x.last_name,x.email,x.phone_number,x.hire_date,x.job_id,x.salary,x.commission_pct,x.manager_id,x.department_id
+,case when mod(row_id,2)=0 then 0 else 1 end as flag from (select e.*,row_number() over(order by employee_id) as row_id from employees e)x---we use this query in alternate loadin 
+as sql query override in source qualifier instead of usin sequence generator
+43.syntax for rename table name in sql server
+sp_rename 'index_prac','index_prac_tgt'
+44.syntax for rename column in sql server
+sp_rename 'table.column_name','new_coumn_name'
+45.rename column name in oracle
+ALTER TABLE table_name
+RENAME COLUMN old_name to new_name;
+
+rename table name in oracle
+
+ALTER TABLE table_name
+RENAME TO new_table_name;
+
+Syntax(MySQL, Oracle):
+
+ALTER TABLE table_name
+RENAME COLUMN old_name TO new_name;
+
+ALTER TABLE table_name
+ADD column_name datatype;
+
+ALTER TABLE Customers
+ADD Email varchar(255);
+
+ALTER TABLE table_name
+DROP COLUMN column_name;
+
+ALTER TABLE Customers
+DROP COLUMN Email;
+
+ALTER TABLE table_name
+MODIFY column_name datatype;
+
+46.creating and droping indexes in ms sql server
+create index index_name on table_name(column)
+drop index index_name on table_name------------------in ms sql  database on clause is used while dropping
+
+47.creating and droping indexes in oracle sql developer
+create index index_name on table_name(column)
+drop index index_name table_name---------------------in oracle database on clause is not used while dropping
+48.Adding constraints in alter command
+MySQL:
+ALTER TABLE Customer ADD CONSTRAINT Con_First UNIQUE (Address);
+
+Oracle:
+ALTER TABLE Customer ADD CONSTRAINT Con_First UNIQUE (Address);
+
+SQL Server:
+ALTER TABLE Customer ADD CONSTRAINT Con_First UNIQUE (Address);
+
+49.iif(ltrim(rtrim(SSN_NO))=' ','drop','pass')
+
+50.create user core identified by core;
+ grant all privileges to core;
+
+51.in clause
+
+SELECT * FROM Customers
+WHERE Country IN ('Germany', 'France', 'UK');
+
+select count(*),department_id from employees group by department_id having department_id in(10,20) 
+
+52.CONCURRENT WORKFLOWS:
+   ~~~~~~~~~~~~~~~~~~~~ 
+By default Informatica workflows cannot be triggered again if they are already running. But there are scenarios where we need to trigger multiple instances of the 
+same workflow.One such example could be when you need to load multiple source files through a single workflow, which gets triggered as soon as the file arrives.
+
+So how do you enable a workflow to run multiple instances concurrently?
+
+Well, there is a flag in the workflow properties which we need to turn on. Below are the steps to achieve this:-
+
+Step1:- Open the workflow in workflow monitor and select the Edit Workflow/Worklet
+in the right click command menu for the workflow.
+
+Step2:- In the general tab enable the property Configure Concurrent Execution.
+
+Step3:- Open the Configure Concurrent Execution dialogue box. There are two options-
+a. Allow concurrent run with same instance name
+The workflow name remains same for every concurrent execution.
+b. Allow concurrent run only with unique instance names
+Here you will need to create at least one instance name in the lower half
+of this dialogue box. You can also specify the parameter file for each
+instance
+
+Now you can run different instances by selecting the Start Workflow Advanced option in the workflow right click command menu.
+Here you can select which instance(s) you need to run.
+
+However in production environment we execute the workflows from bat or shell scripts. 
+You can also trigger multiple instances of the workflow from pmcmd command if the workflow is enabled for concurrent execution.
+In this case you can leave the property (a) in step 3 selected.
+
+Below is the command using which you can start and name a particular instance of the same workflow.
+
+pmcmd %workflow_name% %informatica_folder_name% -paramfile %paramfilepathandname% -rin %instance_name%
+
+Using this command you can run as many instances of a single workflow with unique instance names appended to the original workflow name.
+
+This will help you in creating minimal code for maximum functionality.
+
+Concurrent Workflows Overview:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A concurrent workflow is a workflow that can run as multiple instances concurrently. A workflow instance is a representation of a workflow.
+When you configure a concurrent workflow, you enable the Integration Service to run one instance of the workflow multiple times concurrently, or you define 
+unique instances of the workflow that run concurrently. 
+
+Configure a concurrent workflow with one of the following workflow options: 
+
+Allow concurrent workflows with the same instance name. Configure one workflow instance to run multiple times concurrently. Each instance has the same source, 
+target, and variables parameters. The Integration Service identifies each instance by the run ID. The run ID is a number that identifies a workflow instance that has run.
+
+Configure unique workflow instances to run concurrently. Define each workflow instance name and configure a workflow parameter file for the instance. 
+You can define different sources, targets, and variables in the parameter file. 
+
+When you run concurrent workflows, the Workflow Monitor displays each workflow by workflow name and instance name. If the workflow has no unique instance names, 
+the Workflow Monitor displays the same workflow name for each concurrent workflow run. 
+
+The Integration Service appends either an instance name or a run ID and time stamp to the workflow and session log names to create unique log files for concurrent workflows.
+
+53.Lookup Query:
+   ~~~~~~~~~~~~
+The Integration Service queries the lookup based on the ports and properties you configure in the Lookup transformation.
+The Integration Service runs a default lookup query when the first row enters the Lookup transformation. 
+
+If you use a relational lookup or a pipeline lookup against a relational table, you can override the lookup query.
+You can use the override to change the ORDER BY clause, add a WHERE clause, or transform the lookup data before it is cached. 
+
+If you configure a SQL override and a filter on the lookup query, the Integration Service ignores the filter. 
+
+Default Lookup Query:
+~~~~~~~~~~~~~~~~~~~~
+The default lookup query contains the following statements: 
+
+SELECT 
+
+The SELECT statement includes all the lookup ports in the mapping. To view the SELECT statement for the lookup query, select the Lookup SQL Override property. 
+
+ORDER BY 
+
+The ORDER BY clause orders the columns in the same order they appear in the Lookup transformation. The Integration Service generates the ORDER BY clause.
+You cannot view this when you generate the default SQL.
+
+Overriding the Lookup Query
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The lookup SQL override is similar to entering a custom query in a Source Qualifier transformation. You can override the lookup query for a relational lookup.
+You can enter the entire override, or you can generate and edit the default SQL statement. When the Designer generates the default SQL statement for the lookup SQL override,
+it includes the lookup/output ports in the lookup condition and the lookup/return port. 
+
+You can enter a different lookup query or edit the existing lookup query, which includes the lookup ports, output ports, and the return port. 
+
+Overriding the ORDER BY Clause:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+By default, the Integration Service generates an ORDER BY clause for a cached lookup. The ORDER BY clause contains all lookup condition ports. 
+To increase performance, you can suppress the default ORDER BY clause and enter an override ORDER BY with fewer columns. 
+   ~~~~~~~~~~~~~~~~~~~~          ~~~~~~~~     ~~~~~~~~~~~~~~~~~~~~~~~              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                     
+Note: The override SQL must return data sorted on the lookup keys. When the transformation retrieves all rows in a lookup, the Integration Service builds the data cache 
+with the keys in sorted order. The Integration Service cannot retrieve all the rows from the cache if the rows are not sorted. If the data is not sorted on the keys,
+you might get unexpected results. 
+If you use pushdown optimization, you cannot override the ORDER BY clause or suppress the generated ORDER BY clause with a comment notation. 
+
+The Integration Service always generates an ORDER BY clause, even if you enter one in the override. Place two dashes ‘--’ after the ORDER BY override to suppress the 
+generated ORDER BY clause. For example, a Lookup transformation uses the following lookup condition: 
+
+ITEM_ID = IN_ITEM_ID
+
+PRICE <= IN_PRICEThe Lookup transformation includes two lookup condition ports used in the mapping, ITEM_ID, and PRICE. 
+When you enter the ORDER BY clause with one or more columns, enter the columns in the same order as the ports in the lookup condition.
+You must also enclose all database reserved words in quotes. Enter the following lookup query in the lookup SQL override: 
+
+SELECT ITEMS_DIM.ITEM_NAME AS ITEM_NAME, ITEMS_DIM.PRICE AS PRICE, ITEMS_DIM.ITEM_ID AS ITEM_ID FROM ITEMS_DIM ORDER BY ITEMS_DIM.ITEM_ID --
+To override the default ORDER BY clause for a relational lookup, complete the following steps: 
+
+Generate the lookup query in the Lookup transformation. 
+
+Enter an ORDER BY clause that contains the condition ports in the same order they appear in the Lookup condition. 
+
+Place two dashes ‘--’ as a comment notation after the ORDER BY clause to suppress the ORDER BY clause that the Integration Service generates. 
+
+If you override the lookup query with an ORDER BY clause without adding comment notation, the lookup fails. 
+
+54.Using pmcmd :
+   ~~~~~~~~~~~
+pmcmd is a program you use to communicate with the Integration Service. With pmcmd, you can perform some of the tasks that you can also perform in the Workflow Manager,
+such as starting and stopping workflows and sessions.
+
+Use pmcmd in the following modes:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+a)Command line mode: You invoke and exit pmcmd each time you issue a command. You can write scripts to schedule workflows with the command line syntax.
+Each command you write in command line mode must include connection information to the Integration Service.
+
+b)Interactive mode: You establish and maintain an active connection to the Integration Service. This lets you issue a series of commands.
+
+Running Commands in Command Line Mode:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Command line mode invokes and exits pmcmd each time you issue a command. Command line mode is useful if you want to run pmcmd commands through batch files, 
+scripts, or other programs. 
+
+Use pmcmd commands with operating system scheduling tools like cron, or you can embed pmcmd commands into shell or Perl scripts. 
+
+When you run pmcmd in command line mode, you enter connection information such as domain name, Integration Service name, user name and password in each command. 
+For example, to start the workflow “wf_SalesAvg” in folder “SalesEast,” use the following syntax: 
+
+pmcmd startworkflow -sv MyIntService -d MyDomain -u seller3 -p jackson ?f SalesEast wf_SalesAvg
+The user, seller3, with the password “jackson” sends the request to start the workflow. 
+
+If you omit or incorrectly enter one of the required options, the command fails, and pmcmd returns a non-zero return code. For more information about all the return codes, 
+see pmcmd.
+
+Running Commands in Interactive Mode:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Use pmcmd in interactive mode to start and stop workflows and sessions without writing a script. When you use the interactive mode, you enter connection information 
+such as domain name, Integration Service name, user name, and password. You can run subsequent commands without entering the connection information for each command.
+
+For example, the following commands invoke the interactive mode, establish a connection to Integration Service 
+“MyIntService,” and start workflows “wf_SalesAvg” and “wf_SalesTotal” in folder “SalesEast”:
+
+pmcmd
+pmcmd> connect -sv MyIntService -d MyDomain -u seller3 -p jackson
+pmcmd> setfolder SalesEast
+pmcmd> startworkflow wf_SalesAvg
+pmcmd> startworkflow wf_SalesTotal
+
+To run pmcmd commands in interactive mode:
+
+At the command prompt, switch to the directory where the pmcmd executable is located.
+
+By default, the PowerCenter installer installs pmcmd in the \server\bin directory.
+
+At the command prompt, type pmcmd.
+
+This starts pmcmd in interactive mode and displays the pmcmd> prompt. You do not have to type pmcmd before each command in interactive mode.
+
+Enter connection information for the domain and Integration Service. For example:
+
+connect -sv MyIntService -d MyDomain -u seller3 -p jackson
+
+Type a command and its options and arguments in the following format:
+
+
+            command_name [-option1] argument_1 [-option2] argument_2...pmcmd runs the command and displays the prompt again.
+
+Type exit to end an interactive session.
+
+55.pmcmd startworkflow -sv is -d Domain_DESKTOP-RKQN36P -u Administrator -p admin f Development wf_m_concurrent_workflow
+
+56.
+
+p (precision):
+~~~~~~~~~~~~~
+The Precision defines the maximum number of digits that you can store. The number includes both integer & fractional parts.
+
+For Example 123.45 has a precision of 5 as there is a 5 digits in that number.
+
+The SQL Server allows a minimum precision is 1 and maximum precision of 38. The default is 18.
+
+s (scale):
+~~~~~~~~~
+The scale defines the number of decimal digits that you can store. There is no minimum or maximum here. For Example, the decimal(5,2) column will store the number
+ in 2 decimal places.
+
+If you try to insert a number, which has more decimal position than the column permits, SQL Server will round it off. For Example, 123.456 is rounds to 123.46 
+in a decimal(5,2) column.
+
+If the number does not have a decimal position (like an integer number), then SQL Server will add implicitly .00 to the number. For Example, 123 will become 123.00
+
+Maximum Limit:
+~~~~~~~~~~~~~~
+The precision and scale determine the maximum limit that you can store in decimal data type.
+
+The maximum number of digits to the right of the decimal point (the integer part) is equal to the precision minus scale (p-s). For Example in a Decimal(5,2) column the integer portion can contain only 3 digits (5-2).
+
+Hence in decimal(5,2), you can store from number -999.00 to 999.99. For decimal(38,2), you can store from number -999999999999999999999999999999999999.00 to 999999999999999999999999999999999999.99.
+
+If you want to store number larger than that, you need to use the float data type
+ 
+CREATE TABLE TestDecimal 
+(  
+  Col1 DECIMAL(5,2) , 
+  Col2 NUMERIC(7,2)
+  Col3 DECIMAL, 
+  Col4 DECIMAL(7), 
+);
+
+insert into TestDecimal (col1,Col2,col3) Values (123.45, 12345.67,12345)
+
+
+57.how to insert date datatype column in oracle sql developer 
+insert into emp_sample values(7894,'smith','clerk',7902,(to_date('12/17/1980','mm/dd/yyyy')),800,null,20,null);
+
+58.select t1.employee_id,t1.first_name,t1.department_id,t2.department_name,t2.location_id,t3.city from employees t1
+join departments t2
+on t1.department_id=t2.department_id
+join locations t3
+on t2.location_id=t3.location_id
+
+59.Sequence generator properties:
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Start Value:
+~~~~~~~~~~~
+Use Cycle to generate a repeating sequence, such as numbers 1 through 12 to correspond to the months in a year. 
+
+Enter the lowest value in the sequence that you want the Integration Service to use for the start value. 
+
+Enter the highest value to be used for End Value. 
+
+Select Cycle. 
+
+As it cycles, the Integration Service reaches the configured end value for the sequence, it wraps around and starts the cycle again, beginning with the 
+configured start value. 
+
+Increment By:
+~~~~~~~~~~~~
+The Integration Service generates a sequence in the NEXTVAL port based on the Current Value and Increment By properties in the Sequence Generator transformation. 
+
+The Current Value property is the value at which the Integration Service starts creating the sequence for each session. Increment By is the integer the 
+Integration Service adds to the existing value to create the new value in the sequence. By default, the Current Value is set to 1, and Increment By is set to 1. 
+
+For example, you might create a Sequence Generator transformation with a current value of 1,000 and an increment of 10. If you pass three rows through the mapping, 
+the Integration Service generates the following set of values: 
+
+1000
+1010
+1020End Value
+End Value is the maximum value that you want the Integration Service to generate. If the Integration Service reaches the end value and the Sequence Generator is
+ not configured to cycle through the sequence, 
+the session fails with an overflow error. 
+
+Set the end value to any integer between 1 and 9,233,372,036,854,775,807. If you connect the NEXTVAL port to a downstream integer port, set the end value to a value no 
+larger than the integer maximum value. For example, if you connect the NEXTVAL port to a Small Integer port, set the end value to a maximum of 32,767. 
+If the NEXTVAL exceeds the datatype maximum value for the downstream port, the session fails. 
+
+Current Value:
+~~~~~~~~~~~~~
+The Integration Service uses the current value as the basis for generated values for each session. To indicate which value you want the Integration Service to use the 
+first time it uses the Sequence Generator transformation, you must enter that value as the current value. If you want to use the Sequence Generator transformation to cycle 
+through a series of values, the current value must be greater than or equal to Start Value and less than the end value. 
+
+At the end of each session, the Integration Service updates the current value to the last value generated for the session plus one if the Sequence Generator Number of 
+Cached Values is 0. For example, if the Integration Service ends a session with a generated value of 101, it updates the Sequence Generator current value to 102 in the 
+repository. The next time the Sequence Generator is used, the Integration Service uses 102 as the basis for the next generated value. If the Sequence Generator Increment By 
+is 1, when the Integration Service starts another session using the Sequence Generator, the first generated value is 102. 
+
+If you have multiple versions of a Sequence Generator transformation, the Integration Service updates the current value across all versions when it runs a session. 
+The Integration Service updates the current value across versions regardless of whether you have checked out the Sequence Generator transformation or the parent mapping. 
+The updated current value overrides an edited current value for a Sequence Generator transformation if the two values are different. 
+
+For example, User 1 creates Sequence Generator transformation and checks it in, saving a current value of 10 to Sequence Generator version 1. Then User 1 checks out the Sequence Generator transformation and enters a new current value of 100 to Sequence Generator version 2. User 1 keeps the Sequence Generator transformation checked out. Meanwhile, User 2 runs a session that uses the Sequence Generator transformation version 1. The Integration Service uses the checked-in value of 10 as the current value when User 2 runs the session. When the session completes, the current value is 150. The Integration Service updates the current value to 150 for version 1 and version 2 of the Sequence Generator transformation even though User 1 has the Sequence Generator transformation checked out. 
+
+If you open the mapping after you run the session, the current value displays the last value generated for the session plus one. Since the Integration Service uses the current value to determine the first value for each session, you should edit the current value only when you want to reset the sequence. 
+
+If you have multiple versions of the Sequence Generator transformation, and you want to reset the sequence, you must check in the mapping or reusable Sequence Generator transformation after you modify the current value. 
+
+Note: If you configure the Sequence Generator to Reset, the Integration Service uses the current value as the basis for the first generated value for each session. 
+
+Reset:
+~~~~~
+If you select Reset for a non-reusable Sequence Generator transformation, the Integration Service generates values based on the original start value each time it starts the session. Otherwise, the Integration Service updates the current value to reflect the last-generated value plus the increment value, and then uses the updated value the next time it uses the Sequence Generator transformation. 
+
+For example, you configure a Sequence Generator transformation to create values from 1 to 1,000 with an increment of 1. You choose reset to reset the start value to 1. 
+During the first session run, the Integration Service generates numbers 1 through 234. In each subsequent mapping run, the Integration Service again generates numbers 
+beginning with the initial value of 1. 
+
+If you do not reset, the Integration Service updates the current value to 235 at the end of the first run. The next time it uses the Sequence Generator transformation, 
+the first value generated is 235. 
+
+Note: Reset is disabled for reusable Sequence Generator transformations. 
+
+Replace Missing Values:
+~~~~~~~~~~~~~~~~~~~~~~
+Use the Sequence Generator transformation to replace missing keys by using NEXTVAL with the IIF and ISNULL functions. 
+
+For example, to replace null values in the ORDER_NO column, you create a Sequence Generator transformation with the properties and drag the NEXTVAL port to an 
+Expression transformation. In the Expression transformation, drag the ORDER_NO port into the transformation along with any other required ports.
+Then create an output port, ALL_ORDERS. 
+
+In ALL_ORDERS, you can then enter the following expression to replace null orders: 
+
+IIF( ISNULL( ORDER_NO ), NEXTVAL, ORDER_NO )
+
+Cycle Through a Range of Values:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can establish a range of values for the Sequence Generator transformation. If you use the cycle option, the Sequence Generator transformation repeats the range
+ when it reaches the end value. 
+
+For example, if you set the sequence range to start at 10 and end at 50, and you set an increment value of 10, the Sequence Generator transformation creates 
+the values 10, 20, 30, 40, 50. The sequence starts over again at 10. 
+
+CURRVAL:
+~~~~~~~
+CURRVAL is NEXTVAL plus the Increment By value. You typically only connect the CURRVAL port when the NEXTVAL port is already connected to a downstream transformation.
+When a row enters a transformation connected to the CURRVAL port, the Integration Service passes the last created NEXTVAL value plus one. 
+
+For example, you configure the Sequence Generator transformation as follows: Current Value = 1, Increment By = 1. The Integration Service generates the 
+following values for NEXTVAL and CURRVAL: 
+
+If you connect the CURRVAL port without connecting the NEXTVAL port, the Integration Service passes a constant value for each row. When you connect the CURRVAL port in a 
+Sequence Generator transformation, the Integration Service processes one row in each block. You can optimize performance by connecting only the NEXTVAL port in a mapping. 
+
+Note: When you run a partitioned session on a grid, the Sequence Generator transformation might skip values depending on the number of rows in each partition. 
+
+NEXTVAL Port:
+~~~~~~~~~~~~
+You can connect NEXTVAL to a transformation to generate unique values for each row in the transformation. Connect the NEXTVAL port to a downstream transformation or 
+target to generate a sequence of numbers. If you connect NEXTVAL to multiple transformations, the Integration Service generates the same sequence of numbers for each 
+transformation. 
+
+You connect the NEXTVAL port to generate the sequence based on the Start Value and Increment Value properties. If the Sequence Generator is not configured to cycle 
+through the sequence, the NEXTVAL port generates sequence numbers up to the configured end value. 
+
+When you configure the Sequence Generator transformation with a Start Value = 1 and an Increment Value = 1, the Integration Service generates the same primary key values 
+for the T_ORDERS_PRIMARY and T_ORDERS_FOREIGN target tables. 
+
+Connect NEXTVAL to multiple transformations to generate unique values for each row in each transformation. Use the NEXTVAL port to generate sequence numbers by connecting 
+it to a downstream transformation or target. You connect the NEXTVAL port to generate the sequence based on the Current Value and Increment By properties. 
+If the Sequence Generator is not configured to cycle through the sequence, the NEXTVAL port generates sequence numbers up to the configured End Value. 
+
+For example, you might connect NEXTVAL to two targets in a mapping to generate unique primary key values. The Integration Service creates a column of unique primary key 
+values for each target table. The column of unique primary key values is sent to one target table as a block of sequence numbers. The other target receives a block of 
+sequence numbers from the Sequence Generator transformation after the first target receives the block of sequence numbers. 
+
+For example, you configure the Sequence Generator transformation as follows: Current Value = 1, Increment By = 1. The Integration Service generates the following primary 
+key values for the T_ORDERS_PRIMARY and T_ORDERS_FOREIGN target tables: 
+
+T_ORDERS_PRIMARY TABLE:  T_ORDERS_FOREIGN TABLE:
+PRIMARY KEY              PRIMARY KEY
+1                        6
+2                        7 
+3                        8
+4                        9
+5                        10
+
+If you want the same values to go to more than one target that receives data from a single transformation, you can connect a Sequence Generator transformation to that 
+preceding transformation. The Integration Service processes the values into a block of sequence numbers. This allows the Integration Service to pass unique values to the 
+transformation, and then route rows from the transformation to targets. 
+
+The following figure shows a mapping with a Sequence Generator that passes unique values to the Expression transformation: 
+
+The mapping contains a source, a source qualifier, a Sequence Generator transformation, an Expression transformation, and two targets. The transformations and 
+targets are open. The source and source qualifier are iconized. 
+The Expression transformation populates both targets with identical primary key values. 
+
+For example, you configure the Sequence Generator transformation as follows: Current Value = 1, Increment By = 1. The Integration Service generates the following 
+primary key values for the T_ORDERS_PRIMARY and T_ORDERS_FOREIGN target tables: 
+
+T_ORDERS_PRIMARY TABLE:   T_ORDERS_FOREIGN TABLE:
+PRIMARY KEY               PRIMARY KEY 
+
+1                         1
+2                         2
+3                         3
+4                         4
+5                         5
+
+60.Normalizer transformation:
+used to convert rows to multiple columns
+smart way of representing data in more organised manner
+we cannot copy columns directly to normalizer transformation
+only 3 data types -number,string,nstring
+when we add occurs value > 1 for any port,we get 2 default ports
+a)gk(generated key) - increase sequence value for each input port,gkid is like sequence number
+b)gcid(generated column id)- NRM trans generates sequence for each set of multiple occuring column,gcid generates sequence no for each particular if the group changes it agian starts from 1
+                             just like row_number() over(partition by order by)
+61.pivot
+select * from(select job,dept_no,sal from emp_sample)pivot(sum(sal)for dept_no in(10,20,30))
+
+62.select emp_no,emp_name,mgr,hiredate,case when instr(sal,'$',1)=1 
+                                        then replace(sal,'$','RS.') else sal end from dollar_symbol --(here when we are using instr in case at that time we dont need to 
+specify the colmn name after the case or with when)
+
+63.Constraint-Based Loading for Relational Targets
+In the Workflow Manager, you can specify constraint-based loading for a session. When you select this option, the PowerCenter Integration Service orders the target load on a row-by-row basis. For every row generated by an active source, the PowerCenter Integration Service loads the corresponding transformed row first to the primary key table and then to any foreign key tables. 
+
+64.REG_EXTRACT:Extracts subpatterns of a regular expression within an input value.
+   For example, from a regular expression pattern for a full name, you can extract the first name or last name. 
+   Syntax
+   REG_EXTRACT( subject, 'pattern', subPatternNum, match_from_start )
+
+ .(a period)---> Matches any one character. 
+  [a-z]--------> Matches one instance of a character in lower case. For example, [a-z] matches ab. Use [A-Z] to match characters in upper case. 
+  \d----------->Matches one instance of any digit from 0-9. 
+  \s----------->Matches a whitespace character. 
+  \w----------->Matches one alphanumeric character, including underscore (_) 
+  ()----------->Groups an expression. For example, the parentheses in (\d-\d-\d\d) groups the expression \d\d-\d\d, which finds any two numbers
+                followed by a hyphen and any two numbers, as in 12-34. 
+  {}----------->Matches the number of characters. For example, \d{3} matches any three numbers, such as 650 or 510. Or, [a-z]{2} matches any two letters, such as CA or NY.
+  ?------------>Matches the preceding character or group of characters zero or one time. For example, \d{3}(-{d{4})? matches any three numbers, 
+                which can be followed by a hyphen and any four numbers. 
+  *(an asterisk)--->Matches zero or more instances of the values that follow the asterisk. For example, *0 is any value that precedes a 0. 
+ 
+  +------------>Matches one or more instances of the values that follow the plus sign. For example, \w+ is any value that follows an alphanumeric character. 
+
+  Example:You might use REG_EXTRACT in an expression to extract middle names from a regular expression that matches first name, middle name, and last name. 
+          For example, the following expression returns the middle name of a regular expression: 
+           
+          REG_EXTRACT( Employee_Name, '(\w+)\s+(\w+)\s+(\w+)',2)
+
+          Employee_Name           Return Value 
+
+          Stephen Graham Smith     Graham 
+          Juan Carlos Fernando     Carlos 
+ For example, the following regular expression finds 5-digit U.S.A. zip codes, such as 93930, and 9-digit zip codes, such as 93930-5407: 
+
+ \d{5}(-\d{4})?\d{5} refers to any five numbers, such as 93930. The parentheses surrounding -\d{4} group this segment of the expression. 
+ The hyphen represents the hyphen of a 9-digit zip code, as in 93930-5407. \d{4} refers to any four numbers, such as 5407. The question mark states that the hyphen and last four digits are optional or can appear one time. 
+
+65.REG_MATCH:Returns whether a value matches a regular expression pattern. This lets you validate data patterns, such as IDs, telephone numbers, 
+   postal codes, and state names. 
+   
+   Syntax:REG_MATCH( subject, pattern )
+   
+   subject---Required---String datatype. Passes the value you want to match against the regular expression pattern. 
+   pattern---Required---String datatype. Regular expression pattern that you want to match. You must use perl compatible regular expression syntax. 
+                                         Enclose the pattern in single quotes. 
+    
+   Return Value:
+   TRUE if the data matches the pattern. 
+
+   FALSE if the data does not match the pattern. 
+
+   NULL if the input is a null value or if the pattern is NULL. 
+
+   Example:
+   You might use REG_MATCH in an expression to validate telephone numbers. For example, the following expression matches a 10-digit telephone number 
+   against the pattern and returns a Boolean value based on the match: 
+
+   REG_MATCH (Phone_Number, '(\d\d\d-\d\d\d-\d\d\d\d)' )
+
+   Phone_Number Return Value 
+   408-555-1212 TRUE 
+                NULL 
+  510-555-1212  TRUE 
+  92 555 51212  FALSE 
+  650-555-1212  TRUE 
+  415-555-1212  TRUE 
+  831 555 12123 FALSE 
+
+ Tip:
+
+ You can also use REG_MATCH for the following tasks: 
+
+ To verify that a value matches a pattern. This use is similar to the SQL LIKE function. 
+
+ To verify that values are characters. This use is similar to the SQL IS_CHAR function. 
+
+ To verify that a value matches a pattern, use a period (.) and an asterisk (*) with the REG_MATCH function in an expression. 
+ A period matches any one character. An asterisk matches 0 or more instances of values that follow it. 
+
+ For example, use the following expression to find account numbers that begin with 1835: 
+
+ REG_MATCH(ACCOUNT_NUMBER, ‘1835.*’)To verify that values are characters, use a REG_MATCH function with the regular expression [a-zA-Z]+. a-z matches
+ all lowercase characters. A-Z matches all uppercase characters. The plus sign (+) indicates that there should be at least one character. 
+
+ For example, use the following expression to verify that a list of last names contain only characters: 
+
+ REG_MATCH(LAST_NAME, ‘[a-zA-Z]+’)
+
+ 66.REG_REPLACE:Replaces characters in a string with another character pattern. By default, REG_REPLACE searches the input string for the character pattern you 
+    specify and replaces all occurrences with the replacement pattern.You can also indicate the number of occurrences of the pattern you want to replace in the string.
+
+    Syntax:REG_REPLACE( subject, pattern, replace, numReplacements ) 
+       
+           subject--Required--String datatype. Passes the string you want to search.
+           pattern--Required--String datatype. Passes the character string to be replaced. You must use perl compatible regular expression syntax. 
+                                               Enclose the pattern in single quotes.
+           replace--Required--String datatype. Passes the new character string. 
+           numReplacements--Optional--Numeric datatype. Specifies the number of occurrences you want to replace. If you omit this option, REG_REPLACE will 
+                                                         replace all occurrences of the character string.
+           Return Value:String 
+           
+           Example:
+          
+           The following expression removes additional spaces from the Employee name data for each row of the Employee_name port: 
+
+           REG_REPLACE( Employee_Name, ‘\s+’, ‘ ’)Employee_Name RETURN VALUE 
+
+        Adam Smith        Adam Smith 
+        Greg   Sanders    Greg Sanders 
+        Sarah  Fe         Sarah Fe 
+        Sam      Cooper   Sam Cooper 
+
+
+ 
+ 
+ 
+  
+ 
+
+67.REPLACECHR:Replaces characters in a string with a single character or no character. REPLACECHR searches the input string for the characters you specify 
+              and replaces all occurrences of all characters with the new character you specify. 
+
+              Syntax:REPLACECHR( CaseFlag, InputString, OldCharSet, NewChar )
+
+              CaseFlag--Required--Must be an integer. Determines whether the arguments in this function are case sensitive. You can enter any valid transformation expression. 
+
+                                  When CaseFlag is a number other than 0, the function is case sensitive. 
+
+                                  When CaseFlag is a null value or 0, the function is not case sensitive. 
+              InputString--Required--Must be a character string. Passes the string you want to search. You can enter any valid transformation expression. 
+                                     If you pass a numeric value, the function converts it to a character string. If InputString is NULL, REPLACECHR returns NULL. 
+              OldCharSet--Required--Must be a character string. The characters you want to replace. You can enter one or more characters.
+                                    You can enter any valid transformation expression. You can also enter a text literal enclosed within single quotation marks, 
+                                    for example, 'abc'. 
+
+                                 If you pass a numeric value, the function converts it to a character
+                                 If OldCharSet is NULL or empty, REPLACECHR returns InputString. 
+                           
+              Return Value:String. 
+
+                           Empty string if REPLACECHR removes all characters in InputString. 
+
+                           NULL if InputString is NULL. 
+
+                           InputString if OldCharSet is NULL or empty.
+68.REPLACESTR:Replaces characters in a string with a single character, multiple characters, or no character. REPLACESTR searches the input string for all strings 
+   you specify and replaces them with the new string you specify. 
+
+Syntax:REPLACESTR ( CaseFlag, InputString, OldString1, [OldString2, ... OldStringN,] NewString ) 
+
+69.error fuction
+70.cummulative
+71.select hire_date from hr.employees where regexp_like(hire_date,'^0?[0-9]|[1-2][0-9]|[3][1-2]-[a-z A-Z]{3}-0?[0-9]|[0-9][0-9]$')--regexp_like date pattern match
+72.select * from employees where rownum<6--to get the first 5 records
+73.
+
+Function 
+ Description 
+ 
+ADD_TO_DATE:
+~~~~~~~~~~~~
+Adds a specified amount to one part of a datetime value, and returns a date in the same format as the date you pass to the function. ADD_TO_DATE accepts
+positive and negative integer values. Use ADD_TO_DATE to change the following parts of a date:
+
+Syntax
+ADD_TO_DATE( date, format, amount )
+
+Return Value
+Date in the same format as the date you pass to this function. 
+
+NULL if a null value is passed as an argument to the function
+
+The following expressions all add one month to each date in the DATE_SHIPPED port. If you pass a value that creates a day that does not exist in a particular month, 
+the PowerCenter Integration Service returns the last day of the month. For example, if you add one month to Jan 31 1998, the PowerCenter Integration Service returns 
+Feb 28 1998. 
+
+ADD_TO_DATE( DATE_SHIPPED, 'MM', 1 )
+ADD_TO_DATE( DATE_SHIPPED, 'MON', 1 )
+ADD_TO_DATE( DATE_SHIPPED, 'MONTH', 1 )
+
+The following expressions subtract 10 days from each date in the DATE_SHIPPED port:
+
+ADD_TO_DATE( DATE_SHIPPED, 'D', -10 )
+ADD_TO_DATE( DATE_SHIPPED, 'DD', -10 )
+ADD_TO_DATE( DATE_SHIPPED, 'DDD', -10 )
+ADD_TO_DATE( DATE_SHIPPED, 'DY', -10 )
+ADD_TO_DATE( DATE_SHIPPED, 'DAY', -10 )
+
+The following expressions subtract 15 hours from each date in the DATE_SHIPPED port:
+
+ADD_TO_DATE( DATE_SHIPPED, 'HH', -15 )
+ADD_TO_DATE( DATE_SHIPPED, 'HH12', -15 )
+ADD_TO_DATE( DATE_SHIPPED, 'HH24', -15 )
+
+ 
+ 
+DATE_DIFF:
+~~~~~~~~~
+Returns the length of time between two dates. You can request the format to be years, months, days, hours, minutes, seconds, milliseconds, microseconds, or nanoseconds. 
+The PowerCenter Integration Service subtracts the second date from the first date and returns the difference.
+
+For example, you want to calculate the number of months from September 13 to February 19. In a leap year period, the DATE_DIFF function calculates the month of February as 
+19/29 months or 0.655 months. In a non-leap year period, the DATE_DIFF function calculates the month of February as 19/28 months or 0.678 months. 
+The PowerCenter Integration Service similarly calculates the difference in the dates for the remaining months and the DATE_DIFF function returns the totaled value for 
+the specified period. 
+
+
+Note: Some databases might use a different algorithm to calculate the difference in dates. 
+
+Syntax
+DATE_DIFF( date1, date2, format )
+
+Return Value:
+~~~~~~~~~~~~~
+Double value. If date1 is later than date2, the return value is a positive number. If date1 is earlier than date2, the return value is a negative number. 
+
+0 if the dates are the same. 
+
+NULL if one (or both) of the date values is NULL.
+
+ 
+GET_DATE_PART:
+~~~~~~~~~~~~~
+Returns the specified part of a date as an integer value. Therefore, if you create an expression that returns the month portion of the date, and pass a date such as 
+Apr 1 1997 00:00:00, GET_DATE_PART returns 4. 
+
+Syntax
+GET_DATE_PART( date, format )
+
+A format string specifying the portion of the date value you want to return. Enclose format strings within single quotation marks, for example, 'mm'. 
+The format string is not case sensitive. Each format string returns the entire part of the date based on the date format specified in the session. 
+
+For example, if you pass the date Apr 1 1997 to GET_DATE_PART, the format strings 'Y', 'YY', 'YYY', or 'YYYY' all return 1997. 
+
+Return Value:
+~~~~~~~~~~~~
+Integer representing the specified part of the date. 
+
+NULL if a value passed to the function is NULL.
+
+The following expressions return the hour for each date in the DATE_SHIPPED port. 12:00:00AM returns 0 because the default date format is based on the 24 hour interval
+
+GET_DATE_PART( DATE_SHIPPED, 'HH' )
+GET_DATE_PART( DATE_SHIPPED, 'HH12' )
+GET_DATE_PART( DATE_SHIPPED, 'HH24' )
+
+The following expressions return the day for each date in the DATE_SHIPPED port: 
+
+GET_DATE_PART( DATE_SHIPPED, 'D' )
+GET_DATE_PART( DATE_SHIPPED, 'DD' )
+GET_DATE_PART( DATE_SHIPPED, 'DDD' )
+GET_DATE_PART( DATE_SHIPPED, 'DY' )
+GET_DATE_PART( DATE_SHIPPED, 'DAY' )
+
+The following expressions return the month for each date in the DATE_SHIPPED port: 
+
+GET_DATE_PART( DATE_SHIPPED, 'MM' )
+GET_DATE_PART( DATE_SHIPPED, 'MON' )
+GET_DATE_PART( DATE_SHIPPED, 'MONTH' )
+
+The following expression return the year for each date in the DATE_SHIPPED port: 
+
+GET_DATE_PART( DATE_SHIPPED, 'Y' )
+GET_DATE_PART( DATE_SHIPPED, 'YY' )
+GET_DATE_PART( DATE_SHIPPED, 'YYY' )
+GET_DATE_PART( DATE_SHIPPED, 'YYYY' )
+
+LAST_DAY:
+~~~~~~~~
+Returns the date of the last day of the month for each date in a port. 
+
+Syntax
+LAST_DAY( date )
+
+Date/Time datatype. Passes the dates for which you want to return the last day of the month. You can enter any valid transformation expression that evaluates to a date
+
+Return Value
+Date. The last day of the month for that date value you pass to this function. 
+
+NULL if a value in the selected port is NULL. 
+
+Null
+If a value is NULL, LAST_DAY ignores the row. However, if all values passed from the port are NULL, LAST_DAY returns NULL. 
+
+Group By
+LAST_DAY groups values based on group by ports you define in the transformation, returning one result for each group. If there is no group by port, 
+LAST_DAY treats all rows as one group, returning one value. 
+
+The following expression returns the last day of the month for each date in the ORDER_DATE port: 
+
+LAST_DAY( ORDER_DATE )
+
+
+SET_DATE_PART:
+~~~~~~~~~~~~~
+ 
+Sets one part of a Date/Time value to a value you specify. With SET_DATE_PART, you can change the following parts of a date
+
+Syntax
+SET_DATE_PART( date, format, value )
+ 
+Return Value
+Date in the same format as the source date with the specified part changed. 
+
+NULL if a value passed to the function is NULL. 
+
+The following expressions change the hour to 4PM for each date in the DATE_PROMISED port: 
+
+SET_DATE_PART( DATE_PROMISED, 'HH', 16 )
+SET_DATE_PART( DATE_PROMISED, 'HH12', 16 )
+SET_DATE_PART( DATE_PROMISED, 'HH24', 16 )
+
+Jan 1 1997 12:15:56AM Jan 1 1997 4:15:56PM 
+
+The following expressions change the month to June for the dates in the DATE_PROMISED port. The PowerCenter Integration Service displays an error when you try to
+create a date that does not exist, such as changing March 31 to June 31: 
+
+SET_DATE_PART( DATE_PROMISED, 'MM', 6 )
+SET_DATE_PART( DATE_PROMISED, 'MON', 6 )
+SET_DATE_PART( DATE_PROMISED, 'MONTH', 6 )
+
+Jan 1 1997 12:15:56AM Jun 1 1997 12:15:56AM 
+
+The following expressions change the year to 2000 for the dates in the DATE_PROMISED port: 
+
+SET_DATE_PART( DATE_PROMISED, 'Y', 2000 )
+SET_DATE_PART( DATE_PROMISED, 'YY', 2000 )
+SET_DATE_PART( DATE_PROMISED, 'YYY', 2000 )
+SET_DATE_PART( DATE_PROMISED, 'YYYY', 2000 )
+
+Jan 1 1997 12:15:56AM Jan 1 2000 12:15:56AM 
+
+
+
+
+
+IS_DATE
+ The date you want to check.
+ 
+ROUND:(if the value is 0.6 it returns 1,if the value is 0.5 it returns 0)
+~~~~~
+ROUND (Dates)
+Rounds one part of a date. You can also use ROUND to round numbers. 
+
+This function can round the following parts of a date: 
+
+Syntax
+ROUND( date [,format] )
+
+Return Value
+Date with the specified part rounded. ROUND returns a date in the same format as the source date. You can link the results of this function to any port with a
+Date/Time datatype. 
+
+NULL if you pass a null value to the function. 
+
+ROUND(TO_DATE('04/16/1998 8:24:19','MM/DD/YYYY HH24:MI:SS'),'YY') --->  01/01/1998 00:00:00.000000000
+
+ROUND(TO_DATE('04/16/1998 8:24:19','MM/DD/YYYY HH24:MI:SS'),'YY') --->  01/01/1998 00:00:00.000000000 
+
+ROUND(TO_DATE('04/15/1998 8:24:19','MM/DD/YYYY HH24:MI:SS'),'MM') --->  04/01/1998 00:00:00.000000000 
+
+ROUND(TO_DATE('05/22/1998 10:15:29','MM/DD/YYYY HH24:MI:SS'),'MM') ---> 06/01/1998 00:00:00.000000000 
+
+
+The following expressions round the year portion of dates in the DATE_SHIPPED port: 
+
+ROUND( DATE_SHIPPED, 'Y' )
+ROUND( DATE_SHIPPED, 'YY' )
+ROUND( DATE_SHIPPED, 'YYY' )
+ROUND( DATE_SHIPPED, 'YYYY' )
+
+
+The following expressions round the month portion of each date in the DATE_SHIPPED port: 
+
+ROUND( DATE_SHIPPED, 'MM' )
+ROUND( DATE_SHIPPED, 'MON' )
+ROUND( DATE_SHIPPED, 'MONTH' )
+
+The following expressions round the day portion of each date in the DATE_SHIPPED port: 
+
+ROUND( DATE_SHIPPED, 'D' )
+ROUND( DATE_SHIPPED, 'DD' )
+ROUND( DATE_SHIPPED, 'DDD' )
+ROUND( DATE_SHIPPED, 'DY' )
+ROUND( DATE_SHIPPED, 'DAY' )
+
+The following expressions round the hour portion of each date in the DATE_SHIPPED port: 
+
+ROUND( DATE_SHIPPED, 'HH' )
+ROUND( DATE_SHIPPED, 'HH12' )
+ROUND( DATE_SHIPPED, 'HH24' )
+
+The following expression rounds the minute portion of each date in the DATE_SHIPPED port: 
+
+ROUND( DATE_SHIPPED, 'MI' )
+
+
+TRUNC (Dates):Always return lowest values(if it is 0.9 even though it returns 0,2.99999 returns 2)
+~~~~~~~~~~~~~
+TRUNC (Dates)
+Truncates dates to a specific year, month, day, hour, minute, second, millisecond, or microsecond. You can also use TRUNC to truncate numbers. 
+
+Syntax
+TRUNC( date [,format] )
+
+Return Value
+Date. 
+
+The following expressions truncate the year portion of dates in the DATE_SHIPPED port: 
+
+TRUNC( DATE_SHIPPED, 'Y' )
+TRUNC( DATE_SHIPPED, 'YY' )
+TRUNC( DATE_SHIPPED, 'YYY' )
+TRUNC( DATE_SHIPPED, 'YYYY' )
+
+The following expressions truncate the month portion of each date in the DATE_SHIPPED port: 
+
+TRUNC( DATE_SHIPPED, 'MM' )
+TRUNC( DATE_SHIPPED, 'MON' )
+TRUNC( DATE_SHIPPED, 'MONTH' )
+
+The following expressions truncate the day portion of each date in the DATE_SHIPPED port: 
+
+TRUNC( DATE_SHIPPED, 'D' )
+TRUNC( DATE_SHIPPED, 'DD' )
+TRUNC( DATE_SHIPPED, 'DDD' )
+TRUNC( DATE_SHIPPED, 'DY' )
+TRUNC( DATE_SHIPPED, 'DAY' )
+
+The following expressions truncate the hour portion of each date in the DATE_SHIPPED port: 
+
+TRUNC( DATE_SHIPPED, 'HH' )
+TRUNC( DATE_SHIPPED, 'HH12' )
+TRUNC( DATE_SHIPPED, 'HH24' )
+
+The following expression truncates the minute portion of each date in the DATE_SHIPPED port: 
+
+TRUNC( DATE_SHIPPED, 'MI' )
+ 
+ 
+
+SYSTIMESTAMP:
+~~~~~~~~~~~~~
+
+Returns the current date and time of the node hosting the PowerCenter Integration Service with precision to the nanosecond. The precision to which you display the date and 
+time depends on the platform. 
+
+The return value of the function varies depending on how you configure the argument: 
+
+When you configure the argument of SYSTIMESTAMP as a variable, the PowerCenter Integration Service evaluates the function for each row in the transformation. 
+
+When you configure the argument of SYSTIMESTAMP as a constant, the PowerCenter Integration Service evaluates the function once and retains the value for each row in
+the transformation. 
+
+Syntax
+SYSTIMESTAMP( [format] ) ----> FORMAT IS OPTIONAL
+
+Return Value
+Timestamp. Returns date and time to the specified precision
+
+
+Examples
+Your organization has an online order service and processes real-time data. You can use the SYSTIMESTAMP function to generate a primary key for each transaction in 
+the target database. 
+
+Create an Expression transformation with the following ports and values: 
+
+Port Name        Port Type     Expression 
+Customer_Name    Input         n/a 
+Order_Qty        Input         n/a 
+Time_Counter     Variable      ‘US’ ----- US MEAN MICRO SECONDS
+Transaction_Id   Output        SYSTIMESTAMP ( Time_Counter ) 
+
+At run time, the PowerCenter Integration Service generates the system time to the precision of microseconds for each row: 
+
+Customer_Name  Order_Qty        Transaction_Id 
+Vani Deed      14               14 07/06/2007 18:00:30.701015000 
+Kalia Crop     3                07/06/2007 18:00:30.701029000 
+Vani Deed      6                07/06/2007 18:00:30.701039000 
+Harry Spoon    32               07/06/2007 18:00:30.701048000 
+
+TO_CHAR (Dates):
+~~~~~~~~~~~~~~~ 
+Converts dates to character strings. TO_CHAR also converts numeric values to strings. You can convert the date into any format using the TO_CHAR format strings. 
+
+TO_CHAR (date [,format]) converts a data type or internal value of date, Timestamp, Timestamp with Time Zone, or Timestamp with Local Time Zone data type to a value of string data type specified by the format string. 
+
+Syntax
+TO_CHAR( date [,format] )
+
+Return Value
+String. 
+
+NULL if a value passed to the function is NULL.
+
+The following expression converts the dates in the DATE_PROMISED port to text in the format MON DD YYYY: 
+
+TO_CHAR( DATE_PROMISED, 'MON DD YYYY' )
+
+Apr 1 1998 12:00:10AM --->'Apr 01 1998' .
+
+If you omit the format argument, TO_CHAR returns a string in the date format specified in the session, by default, MM/DD/YYYY HH24:MI:SS.US: 
+
+TO_CHAR( DATE_PROMISED )
+
+Apr 1 1998 12:00:10AM ---->'04/01/1998 00:00:10.000000'  .
+
+The following expressions return the day of the week for each date in a port: 
+
+TO_CHAR( DATE_PROMISED, 'D' )
+
+04-01-1997 12:00:10AM -----> '3'
+
+TO_CHAR( DATE_PROMISED, 'DAY' )
+
+04-01-1997 12:00:10AM -----> 'Tuesday' 
+
+
+TO_DATE:
+~~~~~~~
+TO_DATE
+Converts a character string to a Date/Time datatype. You use the TO_DATE format strings to specify the format of the source strings. 
+
+The output port must be Date/Time for TO_DATE expressions. 
+
+If you are converting two-digit years with TO_DATE, use either the RR or YY format string. Do not use the YYYY format string. 
+
+Syntax
+TO_DATE( string [, format] )
+
+Return Value
+Date. 
+
+
+The following expression returns date values for the strings in the DATE_PROMISED port. TO_DATE always returns a date and time. If you pass a string that does not
+have a time value, the date returned always includes the time 00:00:00.000000000. If you run a session in the twentieth century, the century will be 19. In this example, 
+the current year on the node running the PowerCenter Integration Service is 1998. The datetime format for the target column is MON DD YY HH24:MI SS, so the PowerCenter 
+Integration Service truncates the datetime value to seconds when it writes to the target: 
+
+TO_DATE( DATE_PROMISED, 'MM/DD/YY' )
+ 
+'01/22/98' ---> Jan 22 1998 00:00:00 
+
+The following expression returns date and time values for the strings in the DATE_PROMISED port. If you pass a string that does not have a time value, 
+the PowerCenter Integration Service returns an error. If you run a session in the twentieth century, the century will be 19. The current year on the node running the
+PowerCenter Integration Service is 1998: 
+
+TO_DATE( DATE_PROMISED, 'MON DD YYYY HH12:MI:SSAM' )
+
+'Jan 22 1998 02:14:56PM'----> Jan 22 1998 02:14:56PM 
+
+The following expression converts strings in the SHIP_DATE_MJD_STRING port to date values: 
+
+TO_DATE (SHIP_DATE_MJD_STR, 'J')
+
+'2451544' ----->Dec 31 1999 00:00:00.000000000 
+
+Because the J format string does not include the time portion of a date, the return values have the time set to 00:00:00.000000000. 
+
+The following expression converts a string to a four-digit year format. The current year is 1998: 
+
+TO_DATE( DATE_STR, 'MM/DD/RR')
+
+'04/01/98'----> 04/01/1998 00:00:00.000000000 
+
+The following expression converts a string to a four-digit year format. The current year is 1998: 
+
+TO_DATE( DATE_STR, 'MM/DD/YY')
+
+'04/01/98' ---->04/01/1998 00:00:00.000000000 
+
+Note: For the second row, RR returns the year 2005 and YY returns the year 1905. 
+
+The following expression converts a string to a four-digit year format. The current year is 1998: 
+
+TO_DATE( DATE_STR, 'MM/DD/Y')
+
+'04/01/8' ---->04/01/1998 00:00:00.000000000 
+
+The following expression converts a string to a four-digit year format. The current year is 1998: 
+
+TO_DATE( DATE_STR, 'MM/DD/YYY')
+
+'04/01/998'----> 04/01/1998 00:00:00.000000000 
+
+The following expression converts strings that includes the seconds since midnight to date values: 
+
+TO_DATE( DATE_STR, 'MM/DD/YYYY SSSSS')
+
+'12/31/1999 3783' 12/31/1999 01:02:03 
+
+
+If the target accepts different date formats, use TO_DATE and IS_DATE with the DECODE function to test for acceptable formats. For example: 
+
+DECODE( TRUE,
+
+ --test first format
+   IS_DATE( CLOSE_DATE,'MM/DD/YYYY HH24:MI:SS' ),
+
+ --if true, convert to date
+      TO_DATE( CLOSE_DATE,'MM/DD/YYYY HH24:MI:SS' ),
+
+ --test second format; if true, convert to date
+   IS_DATE( CLOSE_DATE,'MM/DD/YYYY'), TO_DATE( CLOSE_DATE,'MM/DD/YYYY' ),
+
+ --test third format; if true, convert to date
+   IS_DATE( CLOSE_DATE,'MON DD YYYY'), TO_DATE( CLOSE_DATE,'MON DD YYYY'),
+
+ --if none of the above
+   ERROR( 'NOT A VALID DATE') )You can combine TO_CHAR and TO_DATE to convert a numeric value for a month into the text value for a month using a function such as: 
+
+TO_CHAR( TO_DATE( numeric_month, 'MM' ), 'MONTH' )
+
+DATE_COMPARE:
+~~~~~~~~~~~~
+Returns an integer indicating which of two dates is earlier. DATE_COMPARE returns an integer value rather than a date value. 
+
+Syntax
+DATE_COMPARE( date1, date2 )
+
+Return Value
+-1 if the first date is earlier. 
+
+0 if the two dates are equal. 
+
+1 if the second date is earlier. 
+
+NULL if one of the date values is NULL. 
+
+
+74.insert into date_functions_practice values(to_date('jan 12 1998 ','mon dd yyyy'));
+
+75.TO_DATE
+Converts a character string to a Date/Time datatype. You use the TO_DATE format strings to specify the format of the source strings. 
+
+The output port must be Date/Time for TO_DATE expressions. 
+
+If you are converting two-digit years with TO_DATE, use either the RR or YY format string. Do not use the YYYY format string. 
+
+Syntax
+TO_DATE( string [, format] )
+
+
+ 
+string 
+ Required 
+ Must be a string datatype. Passes the values that you want to convert to dates. You can enter any valid transformation expression. 
+ 
+format 
+ Optional 
+ Enter a valid TO_DATE format string. The format string must match the parts of the string argument. For example, if you pass the string 'Mar 15 1998 12:43:10AM',
+ you must use the format string 'MON DD YYYY HH12:MI:SSAM'. If you omit the format string, the string value must be in the date format specified in the session. 
+
+
+76.date formats
+
+AM, a.m., PM, p.m. 
+ Meridian indicator. Use any of these format strings to specify AM and PM hours. AM and PM return the same values as do a.m. and p.m. 
+ 
+DAY 
+ Name of day, including up to nine characters (for example, Wednesday). The DAY format string is not case sensitive. 
+ 
+DD 
+ Day of month (1-31). 
+ 
+DDD 
+ Day of year (001-366, including leap years). 
+ 
+DY 
+ Abbreviated three-character name for a day (for example, Wed). The DY format string is not case sensitive. 
+ 
+HH, HH12 
+ Hour of day (1-12). 
+ 
+HH24 
+ Hour of day (0-23), where 0 is 12AM (midnight). 
+ 
+J 
+ Modified Julian Day. Convert strings in MJD format to date values. It ignores the time component of the source string, assigning all dates the time of 00:00:00.000000000. For example, the expression TO_DATE(‘2451544’, ‘J’) converts 2451544 to Dec 31 1999 00:00:00.000000000. 
+ 
+MI 
+ Minutes (0-59). 
+ 
+MM 
+ Month (1-12). 
+ 
+MONTH 
+ Name of month, including up to nine characters (for example, August). Case does not matter. 
+ 
+MON 
+ Abbreviated three-character name for a month (for example, Aug). Case does not matter. 
+ 
+MS 
+ Milliseconds (0-999). 
+ 
+NS 
+ Nanoseconds (0-999999999). 
+ 
+RR 
+ Four-digit year (for example, 1998, 2034). Use when source strings include two-digit years. Use with TO_DATE to convert two-digit years to four-digit years. 
+
+Current Year Between 50 and 99. If the current year is between 50 and 99 (such as 1998) and the year value of the source string is between 0 and 49, the PowerCenter Integration Service returns the next century plus the two-digit year from the source string. If the year value of the source string is between 50 and 99, the PowerCenter Integration Service returns the current century plus the specified two-digit year. 
+
+Current Year Between 0 and 49. If the current year is between 0 and 49 (such as 2003) and the source string year is between 0 and 49, the PowerCenter Integration Service returns the current century plus the two-digit year from the source string. If the source string year is between 50 and 99, the PowerCenter Integration Service returns the previous century plus the two-digit year from the source string. 
+ 
+SS 
+ Seconds (0-59). 
+ 
+SSSSS 
+ Seconds since midnight. When you use SSSSS in a TO_DATE expression, the PowerCenter Integration Service only evaluates the time portion of a date. 
+
+For example, the expression TO_DATE( DATE_STR, ‘MM/DD/YYYY SSSSS’) converts 12/31/1999 3783 to 12/31/1999 01:02:03. 
+ 
+US 
+ Microseconds (0-999999). 
+ 
+Y 
+ The current year on the node running the PowerCenter Integration Service with the last digit of the year replaced with the string value. 
+ 
+YY 
+ The current year on the node running the PowerCenter Integration Service with the last two digits of the year replaced with the string value. 
+ 
+YYY 
+ The current year on the node running the PowerCenter Integration Service with the last three digits of the year replaced with the string value. 
+ 
+YYYY 
+ Four digits of a year. Do not use this format string if you are passing two-digit years. Use the RR or YY format string instead
+76.https://us04web.zoom.us/j/*******884?pwd=dsqvbNyfC9j1hH2nUp2ZgO7mqAM5Za.1
+
+78.select t1.employee_id,t1.first_name,t1.salary,t1.department_id,t3.department_name from employees t1
+join (select employee_id,department_id,salary,max(salary)over(partition by department_id)mazsal from employees)t2
+on t1.employee_id=t2.employee_id and t1.salary=t2.mazsal
+join departments t3
+on t3.department_id=t2.department_id
+79.IIF(V_SALARY=SALARY,V_PREV_RANK,V_SEQ)----RANK
+
+IIF(SALARY=V_SALARY,V_PREV_RANK,V_RANK+1)---DENSE_RANK
+
+IIF(DEPT_NAME!=V_DEPT_NAME,1,IIF(SALARY=V_SALARY,V_PREV_RANK,V_RANK+1))--DENSE_RANK DEPT_WISE
+
+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
+
+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
+
+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
+
+80.cast function:
+   ~~~~~~~~~~~~~~  
+The CAST() function converts a value (of any type) into a specified datatype.
+
+Tip: Also look at the CONVERT() function.
+ 
+Syntax:
+~~~~~~
+CAST(expression AS datatype(length))
+
+Eg:
+~~
+Convert a value to an int datatype:
+
+SELECT CAST(25.65 AS int);
+
+Convert a value to a varchar datatype:
+
+SELECT CAST(25.65 AS varchar);
+
+Convert a value to a datetime datatype:
+
+SELECT CAST('2017-08-25' AS datetime);
+
+81.
+create table account_master
+(acid int primary key ,name varchar(20),cbal money,obal money ,status varchar(10))
+
+create table transaction_master
+(tno int identity(1,1),acid int,dot date,txntype varchar(10),txnamt money,constraint fk_acid foreign key (acid) 
+references account_master (acid))
+
+82.
+
+ALTER TABLE department
+ADD CONSTRAINT fkey_student_admission
+    FOREIGN KEY (admission)
+    REFERENCES students (admission);
+83.
+Add one or multiples columns to an existing table
+
+ALTER TABLE tbl_name ADD column_name_1 datatype, column_name_2 datatype ..
+
+Change the Data Type of the Existing Table
+
+ALTER TABLE tbl_name ALTER COLUMN column_name datatype
+
+84.
+To query information_schema.columns:
+select TABLE_NAME,COLUMN_NAME,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,COLLATION_NAME from INFORMATION_SCHEMA.COLUMNS
+where TABLE_NAME='tblpatients'
+
+To query Sys.columns:
+select object_name(object_id) [Table Name],name,max_length from sys.columns where object_id =object_id('tblpatients')
+ 
+85.
+create table time_prac
+(col1 date,co12 time,col3 smalldatetime,col4 datetime,col5 datetime2,col6 datetimeoffset )
+
+date            yyyy-mm-dd       0001-01-01 through 9999-12-31   3 bytes
+samlldatetime   yyyy-mm-dd       1900-01-01 through 2079-06-06   4 bytes
+                hh:mm:ss
+datetime        yyyy-mm-dd
+                hh:mm:ss[nnn]    1753-01-01 through 9999-12-01   8 bytes
+
+datetime2       yyyy-mm-dd
+                hh:mm:ss[.nnnnnn] 0001-01-01 00:00:00.0000000    6 to 8 bytes
+
+datetimeoffset  yyyy-mm-dd
+                hh:mm:ss[.nnnnnn] 0001-01-01 00:00:00.0000000    8 to 10 bytes
+                [+|-]hh:mm        in UTC
+
+time            hh:mm:ss                                         3 to 5 bytes
+                [.nnnnnn]
+                
+
+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
+
+
+
+
+
+
+
