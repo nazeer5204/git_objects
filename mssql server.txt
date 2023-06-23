@@ -1,0 +1,195 @@
+create table employees
+(id int primary key,first_name nvarchar(10),last_name nvarchar(20),doj date,dept_name nvarchar(20),salary decimal(8,2))
+
+select * from employees
+
+insert into employees values(1000,'shaik','zameeruddin','08/10/1995','finance',200000.00)
+
+select CURRENT_USER
+
+--date time functions
+
+--getdate()
+
+select getdate()
+
+--current_timestamp
+
+select CURRENT_TIMESTAMP
+
+--sysdatetime
+
+The SYSDATETIME() function returns the date and time of the computer where the SQL Server is running.
+
+select sysdatetime()
+
+select getdate() as getdate,current_timestamp cts,sysdatetime() as sysdatetime
+
+--dateadd
+
+select dateadd(year,1,getdate()),dateadd(year,-1,getdate()),dateadd(month,3,getdate()),dateadd(month,-3,getdate()),
+dateadd(day,90,'06-17-2023'),dateadd(day,-180,'06-17-2023');
+
+--datediff
+
+select datediff(day,'06/17/2023','06/17/2022'),datediff(MONTH,'06/17/2022','06/17/2023'),datediff(week,'06/17/2022',getdate())
+,datediff(HOUR,'06/17/2022 16:44','06/17/2024 00:00');
+
+--datename
+
+The DATENAME() function returns a specified part of a date.
+
+This function returns the result as a string value.
+
+select datename(month,getdate())
+
+select datename(HOUR,getdate())
+
+select datename(day,getdate())
+
+select datename(week,getdate())
+
+--datepart
+
+The DATEPART() function returns a specified part of a date.
+
+This function returns the result as an integer value.
+
+
+select datepart(month,getdate())
+
+select datepart(HOUR,getdate())
+
+select datepart(day,getdate())
+
+select datepart(week,getdate())
+
+
+--isdate
+
+The ISDATE() function checks an expression and returns 1 if it is a valid date, otherwise 0.
+
+select isdate('06/26/1999')
+
+--day
+
+The DAY() function returns the day of the month (from 1 to 31) for a specified date.
+
+select day(getdate()),day('04/26/1998')]
+
+
+--month
+
+The MONTH() function returns the month part for a specified date (a number from 1 to 12).
+
+select MONTH(getdate()) as month
+
+--year
+
+The YEAR() function returns the year part for a specified date.
+
+select year(getdate()) as year
+
+--cast
+
+The CAST() function converts a value (of any type) into a specified datatype.
+
+select cast(26.66 as int)
+
+select cast(20 as varchar(10))
+
+select cast(20 as datetime)
+
+--convert
+
+The CONVERT() function converts a value (of any type) into a specified datatype.
+
+Syntax:
+CONVERT(data_type(length), expression, style)
+
+select convert(int,23.3)
+
+select convert(datetime, '2017-08-25')
+
+SELECT CONVERT(varchar, '2017-08-25', 101);
+
+--isnumeric
+
+The ISNUMERIC() function tests whether an expression is numeric.
+This function returns 1 if the expression is numeric, otherwise it returns 0.
+
+Syntax
+ISNUMERIC(expression)
+
+SELECT ISNUMERIC('4567na');
+select ISNUMERIC(1999)
+
+--iif
+
+The IIF() function returns a value if a condition is TRUE, or another value if a condition is FALSE.
+
+select iif(500<1000,'yes','no')
+
+SELECT OrderID, Quantity, IIF(Quantity>10, 'MORE', 'LESS')
+FROM OrderDetails;
+
+SELECT IIF('hello' = 'bye', 'YES', 'NO');
+
+--isnull
+
+The ISNULL() function returns a specified value if the expression is NULL.
+
+If the expression is NOT NULL, this function returns the expression.
+
+Syntax
+ISNULL(expression, value)
+
+select isnull(0,'nazeer')
+
+select isnull(null,'nazeer')
+
+--nullif
+
+The NULLIF() function returns NULL if two expressions are equal, otherwise it returns the first expression.
+
+Syntax
+NULLIF(expr1, expr2)
+
+select nullif('nazeer','nazeer')
+
+select nullif('zameer','nazeer')
+
+--charindex
+
+The CHARINDEX() function searches for a substring in a string, and returns the position.it is same like instring
+
+If the substring is not found, this function returns 0.
+
+Note: This function performs a case-insensitive search.
+
+Syntax
+CHARINDEX(substring, string, start)
+
+select charindex('@','shaiknazeeruddin001@gmail.com')
+
+select SUBSTRING('shaiknazeeruddin001@gmail.com',1,CHARINDEX('@','shaiknazeeruddin001@gmail.com')-1)
+
+--soundex
+
+The SOUNDEX() function returns a four-character code to evaluate the similarity of two expressions.
+
+Note: The SOUNDEX() converts the string to a four-character code based on how the string sounds when spoken.
+
+Tip: Also look at the DIFFERENCE() function.
+
+SELECT SOUNDEX('Juice'), SOUNDEX('Banana');
+
+--difference
+
+The DIFFERENCE() function compares two SOUNDEX values, and returns an integer. The integer value indicates 
+the match for the two SOUNDEX values, from 0 to 4.
+
+0 indicates weak or no similarity between the SOUNDEX values. 4 indicates strong similarity or identically 
+SOUNDEX values.
+
+select DIFFERENCE('juice','jucy')
