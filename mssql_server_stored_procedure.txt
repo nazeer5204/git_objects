@@ -1,0 +1,699 @@
+Variables:
+~~~~~~~~~
+In programming language,variables are generally used to temporaily store values in memory.
+T-SQL variables are created with declare command followed by variable name preceded with @ symbol and data type.
+By default,the value of declared variable is null.
+
+Syntax:
+~~~~~~
+Declare @variable_name datatype(size);
+
+Eg:
+~~
+Declare @name varchar(20);
+Declare @name varchar(20),@age int;
+
+Assign a value to a variable:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Both the SET and the SELECT command can assign the value to a variable.
+SET can only set the value of one variable at a time.
+SELECT command retrive data from tables and assign multiple variable values with a single statement.
+Can also assign value at the time of declaration
+
+Syntax:
+~~~~~~
+SET @variable_name=value;
+SELECT @variable_name=value,@variable_name=value;
+Declare @number INT=100;
+
+Eg:
+~~
+SET @salary=30000;
+SELECT @name='ishwar',@age=25;
+
+Incrementing variable:
+~~~~~~~~~~~~~~~~~~~~~
+With the increment variable feature we can perform mathematical operations like +,-,*
+
+Syntax:
+~~~~~~
+set @variable+=10
+or
+set @variable=@variable+10
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Begin..End:
+~~~~~~~~~~
+The Begin..End keywords are used to group multiple lines into one statement block.
+In addition,Begin..End can be nested.It simply means that we can place a Begin..End statement with another Begin..End statement.
+
+Syntax:
+~~~~~~
+Begin
+     {sql statements or statement block}
+End
+
+Eg:
+~~
+Begin 
+     PRINT('HELLO')
+END
+
+Begin
+     Declare @name varchar(10),@salary int,@dept_id varchar(10);
+     select @name=emp_name,@salary=emp_salary from employee where dept_id=@dept_id
+     select @name 'name',@salary 'salary' 
+End
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+IF..ELSE:
+~~~~~~~~
+The IF..ELSE statement is a control flow statement that allows you to execute or skip a statement block based on a specified condition.
+a)simple if b)if...else
+
+a)simple if
+syntax:
+~~~~~~
+IF CONDITON
+BEGIN
+     {SQL STATEMENT OR STATEMENT BLOCK}
+END
+
+Note:If the condition contains a SELECT statement,then it must be enclose in parnthesis.
+
+Eg:
+~~
+Begin
+     Declare @sal int;
+     select @sal=avg(salary) from employee
+     select @sal as avgsal
+     If @sal>5000
+     Begin
+          print('The avgsal is greater than 5000')
+     END
+END
+
+b)if..else
+
+syntax:
+~~~~~~~
+if condition
+ begin 
+     {sql statements or statement block}
+ end
+else
+ begin
+     {sql statements or statement block}
+ end
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+While loop:
+~~~~~~~~~~
+The while loop statement is a control flow statement that allows you to execute a statement block repetedly as long as specified condition is TRUE.
+The execution of statements in the while loop can be controlled from inside the loop with the BREAK and CONTINUE keywords.
+
+SYNTAX:
+~~~~~~
+WHILE condition
+Begin
+    {sql statements or statement block}
+END
+
+Eg:
+~~
+declare @a int=0
+while @a<=10
+begin 
+     print ('hello')
+	 set @a+=1
+	 if @a>=10
+	
+	 break
+end
+
+Begin
+     while (select min(salary) from employee) <2000
+     Begin
+          update employee set salary=salary+500;
+          print 'salary updated'
+          If (select min(salary) from employee) >2000
+          Begin
+               print('The min salary is greater than 2000')
+          End
+     End
+End
+
+
+declare @x int=0
+while @x<10
+begin
+     print('hello')
+	 set @x+=1
+end
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+use hr;
+go
+
+DECLARE @name varchar(20)
+set @name='ZAMEER'
+PRINT @name
+
+DECLARE @name varchar(20),@salary decimal(8,2)
+select @name='zameer',@salary=200000
+print @name 
+print @salary
+
+declare @number int=100
+set @number+=50
+select @number
+
+set @number-=50
+select @number
+
+set @number*=2
+select @number
+
+declare @a int=0
+while @a<=10
+begin 
+     print ('hello')
+	 set @a+=1
+	 if @a>=10
+	
+	 break
+end
+
+select * from employee
+
+
+begin 
+     declare @uname varchar(50),@usalary int;----here we declared variables
+	 select @uname=emp_name,@usalary=salary from employee where dept_name='hr'
+	 select @uname emp_name,@usalary salary
+end
+
+
+select emp_name,salary from employee where dept_name='HR'
+
+select * from employee
+
+select min(SALARY) from employee
+
+begin
+     declare @sal int
+	 select @sal=avg(salary) from employee
+	 select @sal avgsal
+	 if @sal>5000
+	 begin
+	      print 'the avgsal is greater than 5000'
+	 end
+end
+	
+begin 
+     declare @sal1 int
+	 select @sal1=max(salary) from employee
+	 select @sal1 mazsal
+	 if @sal1>=12000
+	 begin
+	      print('the mazsal is greater than 12000')
+	 end
+	 else
+	 begin 
+	      print('the mazsal is not greater than 12000')
+     end
+end	 	      
+
+select * from employee
+
+Begin
+     While(select min(salary) from employee)<2000
+	 Begin
+	      Update employee set SALARY=SALARY+500
+		  print 'salary is updated'
+	      IF(select min(salary) from employee)>2000
+		     print 'salary is greater than 2000'
+		     break
+	  end
+		  
+end
+
+
+select min(salary) from employee
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Store Procedure:
+~~~~~~~~~~~~~~~
+Syntax:
+~~~~~~
+create procedur <pro name>
+(
+       input ---to pass the data to sp
+       outpu----to return from sp
+)
+as 
+begin
+       --variables
+       --ddl
+       --dml
+       --programming
+       --calling a function
+       --cursors
+       --retruna stmt
+   
+end
+go
+
+call th sp:
+~~~~~~~~~~
+exec <sp name>
+or
+execute <sp name>
+or
+sp name
+
+
+
+
+create proc spgetemployees 
+as
+begin 
+     select emp_id,emp_name,dept_name from employee --sample stored procedure 
+end
+
+to execute stored procedure by 3 different ways:
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+spgetemployees
+exec spgetemployees 
+execute spgetemployees 
+
+select emp_id,emp_name,dept_name,salary from employee where dept_name='hr' and salary>2000
+
+create procedure spgetempbydeptsal
+@dept_name varchar(10),
+@salary int
+as
+begin
+     select emp_id,emp_name,dept_name,salary from employee where dept_name=@dept_name and salary>@salary  --store procedure with input parameters,input parameters should be declared '@' as prefix
+end
+
+spgetempbydeptsal @dept_name='hr',@salary=1000 -- to execute stored procedure with input parameters we have to pass values with the exact data type
+
+spgetempbydeptsal 'it',1000
+
+alter procedure spgetempbydeptsal --to alter store procedure use alter keyword 
+@dept_name nvarchar(10)
+as
+begin
+     select emp_id,emp_name,dept_name,salary from employee where dept_name=@dept_name 
+end
+
+spgetempbydeptsal 'hr'
+
+sp_helptext spgetempbydeptsal
+
+
+select count(*) from employee where dept_name='hr'
+
+create procedure spcntempdept 
+@dept_name varchar(10),@employeecnt int out --stored procedure with output parameter we should declare output with out or output keyword
+as 
+begin
+select @employeecnt=count(emp_id) from employee where dept_name=@dept_name
+end
+
+declare @cnt int  -- to execute store procedure with output parameters we should a variable  to store the output and also mention this with execute command 
+execute spcntempdept 'it', @cnt output
+if @cnt is null
+   print '@cnt is null'
+else 
+   print '@cnt is not null'
+print @cnt
+
+drop procedure spcntempdept
+
+sp_help spcntempdept;
+
+
+
+CREATE procedure spgetbalancename
+
+@acid int,@cbal money out,@name varchar(20) output
+
+as 
+
+begin
+
+     declare @cnt int
+
+     select @cnt=count(*) from account_master where acid=@acid
+
+	 if @cnt=0
+
+	        begin
+
+	             print 'enter valid ac/no.pls check'
+
+				 return 69
+
+	        end
+
+	  else
+
+	        begin
+
+                 select @name=name,@cbal=cbal from account_master where acid=@acid
+
+				 return 0
+
+	        end
+
+
+
+end  
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Trigger:
+~~~~~~~
+ALTER trigger [dbo].[trg_updatebalance]
+on [dbo].[transaction_master]
+after insert,update,delete
+as 
+begin
+
+declare @acid int
+declare @txntype varchar(10)
+declare @txnamt money
+declare @status varchar(20)
+declare @cbal money
+
+--1.check the account status of account holder
+
+--whose account status i.e who is currently doing the transaction i.e in the inserted table roew
+
+select @acid=acid,@txntype=txntype,@txnamt=txnamt from inserted
+
+--get the customer status
+select @status=status from account_master where acid=@acid
+
+--validation
+if (@status='inoperative')
+   begin
+     print('you account is closed,you cannot do any CD/CW ETC..')
+	 rollback
+   END
+
+else
+--update balance in account master
+--cd
+  begin
+    if(@status='operational' and @txntype='cd')
+      begin
+       UPDATE account_master set cbal=cbal+@txnamt,uncbal=uncbal+@txnamt where acid=@acid
+	end
+--cw
+    if(@status='operational' and @txntype='cw')
+      begin
+	   --check cust funds
+	   select @cbal=cbal from account_master where acid=@acid
+	   if(@cbal>=@txnamt)
+	    begin
+         UPDATE account_master set cbal=cbal-@txnamt,uncbal=uncbal-@txnamt where acid=@acid
+	    end
+	    else
+		 begin
+		   print('you have insufficient funds')
+		   rollback
+          end
+	   end
+--cqd
+     if(@status='operational' and @txntype='cqd')
+	    begin
+		 update account_master set uncbal=uncbal+@txnamt where acid=@acid
+		end
+   end---end of else
+end--end of trigger
+
+GO
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+alter
+
+trigger 
+
+trg_audit on employee_test
+
+after insert
+
+as
+
+declare @emp_id int,
+
+@emp_name varchar(100),
+
+@emp_sal decimal(10,2),
+
+@audit_action varchar(100),
+
+@audit_timestamp datetime
+
+
+
+begin
+
+---insert
+
+      select @emp_id=emp_id,@emp_name=emp_name,@emp_sal=emp_sal from inserted
+
+      set @audit_action='inserted'
+
+      insert into employee_test_audit values(@emp_id,@emp_name,@emp_sal,@audit_action,getdate())
+
+      print('insert trigger fired')
+end
+
+
+
+
+
+
+--delete
+
+  select @emp_id=emp_id,@emp_name=emp_name,@emp_sal=emp_sal from deleted
+
+  
+  insert into employee_test_audit values(@emp_id,@emp_name,@emp_sal,@audit_action3,getdate())
+
+  print ('delete trigger fired')
+
+end
+
+
+sp_help employee_test
+
+sp_help employee_test_audit
+
+alter trigger trgaudit_del on employee_test
+after delete
+as
+begin
+   set nocount on;
+   declare @emp_id int
+   declare @emp_name varchar(100)
+   declare @emp_sal decimal(10,2)
+   declare @audit_action varchar(100)
+
+   select @emp_id=emp_id,@emp_name=emp_name,@emp_sal=emp_sal from deleted
+   set @audit_action='deleted'
+   insert into Employee_Test_Audit values(@emp_id,@emp_name,@emp_sal,@audit_action,getdate())
+   print 'trgaudit_del ran successfully'
+    
+end
+
+select * from Employee_Test
+
+select * from Employee_Test_Audit;
+
+select * from sys.procedures
+
+
+
+
+create trigger trgaudit_update on employee_test
+after update 
+as 
+begin
+    set nocount on;
+    declare @emp_id int,@emp_name varchar(100),@emp_sal decimal(10,2),@audit_action varchar(100)
+	select @emp_id=emp_id,@emp_name=emp_name,@emp_sal=emp_sal from inserted
+
+	if update (emp_id)
+	set @audit_action='updated id'
+
+	if update(emp_name)
+	set @audit_action='updated name'
+
+	if update(emp_sal)
+	set @audit_action='updated sal'
+
+	insert into Employee_Test_Audit values(@emp_id,@emp_name,@emp_sal,@audit_action,getdate())
+	print('trgaudit_update ran successfully')
+end
+
+select * from Employee_Test
+
+update Employee_Test set emp_sal=1600 where Emp_ID=1
+
+
+
+CREATE
+
+
+
+trigger 
+
+
+
+trg_audit on employee_test
+
+
+
+after insert
+
+
+
+as
+
+
+
+declare @emp_id int,
+
+
+
+@emp_name varchar(100),
+
+
+
+@emp_sal decimal(10,2),
+
+
+
+@audit_action varchar(100),
+
+
+
+@audit_timestamp datetime
+
+
+
+
+
+
+
+begin
+
+
+
+---insert
+
+
+
+      select @emp_id=emp_id,@emp_name=emp_name,@emp_sal=emp_sal from inserted
+
+
+
+      set @audit_action='inserted'
+
+
+
+      insert into employee_test_audit values(@emp_id,@emp_name,@emp_sal,@audit_action,getdate())
+
+
+
+      print('insert trigger fired')
+
+end
+
+
+CREATE trigger trgaudit_del on employee_test
+
+after delete
+
+as
+
+begin
+
+   set nocount on;
+
+   declare @emp_id int
+
+   declare @emp_name varchar(100)
+
+   declare @emp_sal decimal(10,2)
+
+   declare @audit_action varchar(100)
+
+
+
+   select @emp_id=emp_id,@emp_name=emp_name,@emp_sal=emp_sal from deleted
+
+   set @audit_action='deleted'
+
+   insert into Employee_Test_Audit values(@emp_id,@emp_name,@emp_sal,@audit_action,getdate())
+
+   print 'trgaudit_del ran successfully'
+
+    
+
+end
+
+
+create trigger trgaudit_update on employee_test
+
+after update 
+
+as 
+
+begin
+
+    set nocount on;
+
+    declare @emp_id int,@emp_name varchar(100),@emp_sal decimal(10,2),@audit_action varchar(100)
+
+	select @emp_id=emp_id,@emp_name=emp_name,@emp_sal=emp_sal from inserted
+
+
+
+	if update (emp_id)
+
+	set @audit_action='updated id'
+
+
+
+	if update(emp_name)
+
+	set @audit_action='updated name'
+
+
+
+	if update(emp_sal)
+
+	set @audit_action='updated sal'
+
+
+
+	insert into Employee_Test_Audit values(@emp_id,@emp_name,@emp_sal,@audit_action,getdate())
+
+	print('trgaudit_update ran successfully')
+
+end
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
