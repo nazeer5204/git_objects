@@ -1,0 +1,58 @@
+#!/bin/bash
+name=$1
+qualification=$2
+current_company=$3
+role=$4
+skill_set=$5
+experience=$6
+current_project=$7
+client=$8
+martial_status=$9
+gender=$10
+
+echo name $name
+echo qualification $qualification
+echo current_company $current_company
+echo role $role
+echo skill_set $skill_set
+echo experience $experience
+echo current_project $current_project
+echo clien $client
+echo martial_status $martial_status
+echo gender $gender
+
+or
+
+#!/bin/bash
+echo name $1
+echo qualification $2    
+echo current_company $3  
+echo role $4             
+echo skill_set $5        
+echo experience $6
+echo current_project $7
+echo clien $8
+echo martial_status $9
+echo gender ${10}
+
+
+#!/bin/bash
+echo program name $0
+echo no of arguments $#
+echo the arguments are $*
+echo the first argument $1
+echo the second argument $2
+echo the third argument $3
+
+
+
+#!/bin/bash
+echo enter any two values
+read a b
+sum=`expr $a + $b` -----to perform arthmetic operations we use expr
+echo $sum
+
+$* store all command line arguments
+$@ store all command line arguments
+$# store count of command line arguments
+
