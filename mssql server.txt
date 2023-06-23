@@ -193,3 +193,152 @@ the match for the two SOUNDEX values, from 0 to 4.
 SOUNDEX values.
 
 select DIFFERENCE('juice','jucy')
+
+--stuff
+
+The STUFF() function deletes a part of a string and then inserts another part into the string, starting at a specified position.
+
+select stuff('shaiknazeeruddin',1,5,'syed')
+
+--replace
+
+The REPLACE() function replaces all occurrences of a substring within a string, with a new substring.
+
+select replace('shaiknazeeruddin','shaik','syed')---replaces all occurences of a substring within a string,with a new substring
+
+select replace('shaiknazeeruddin','naz','zam')
+
+--left
+
+The LEFT() function extracts a number of characters from a string (starting from left).
+
+select left('shaiknazeeruddin',5)---extracts no.of characters from left
+
+--right
+
+The RIGHT() function extracts a number of characters from a string (starting from right).
+
+select right('shaiknazeeruddin',11)---extracts no.of characters from right
+
+--len
+
+The LEN() function returns the length of a string.
+
+Note: Trailing spaces at the end of the string is not included when calculating the length. However, leading spaces at the start of the string is 
+included when calculating the length.
+
+select len('shaiknazeeruddin') as length
+
+select len('  shaiknazeeruddin  ')
+
+--datalength
+
+The DATALENGTH() function returns the number of bytes used to represent an expression.
+
+Note: The DATALENGTH() function counts both leading and trailing spaces when calculating the length of the expression.
+
+select DATALENGTH(' shaiknazeeruddin ')--datalength calculates the length of expression including leading and trailing spaces.
+
+--upper
+
+The UPPER() function converts a string to upper-case.
+
+select upper('shaiknazeeruddin')
+
+--lower
+
+The LOWER() function converts a string to lower-case.
+
+select lower('SHAIKNAZEERUDDIN')
+
+--str
+
+The STR() function returns a number as a string.
+
+select str(10)--return a number as string
+
+--ltrim
+
+The LTRIM() function removes leading spaces from a string.
+
+select ltrim('  shaiknazeeruddin')
+
+--rtrim
+
+The RTRIM() function removes trailing spaces from a string.
+
+select rtrim('shaiknazeeruddin  ')
+
+--reverse
+
+The REVERSE() function reverses a string and returns the result.
+
+select REVERSE('shaiknazeeruddin')
+
+--space
+
+The SPACE() function returns a string of the specified number of space characters.
+
+select space(10)
+
+select 'nazeer'+space(20)+'uddin'
+
+--quotename
+
+The QUOTENAME() function returns a Unicode string with delimiters added to make the string a valid SQL Server delimited identifier.
+
+select QUOTENAME('shaiknazeeruddin')
+
+select quotename('shaiknazeerddin','{}')
+
+select quotename('shaiknazeeruddin','()')
+
+--concat
+
+The CONCAT() function adds two or more strings together.
+
+
+select concat('nazeer',' ','uddin')
+
+--concat+
+
+The + operator allows you to add two or more strings together.
+
+SELECT 'W3Schools' + '.com';
+
+--replicate
+
+The REPLICATE() function repeats a string a specified number of times.
+
+select REPLICATE('hlo world',5)
+
+--rand
+
+The RAND() function returns a random number between 0 (inclusive) and 1 (exclusive).
+
+select rand(6)
+
+select rand()*(10-5)+5
+
+select floor(rand()*(10-6)+5)
+
+select ceiling(6.0009)
+
+select ROUND(1.777,2)
+
+--sqrt
+
+Return the square root of a number:
+
+SELECT SQRT(13);
+3.6055512754639891
+
+SELECT SQRT(16);
+4
+
+--square
+
+The SQUARE() function returns the square of a number.
+
+SELECT SQUARE(64);
+4096.0
