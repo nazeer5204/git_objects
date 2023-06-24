@@ -685,7 +685,20 @@ begin
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
+alter procedure spupdatesalary
+as 
+begin
+     
+	 while (select min(SALARY) from employee)<5000
+	      begin
+		        update employee set SALARY=SALARY+500 where SALARY<5000
+				if (select min(salary) from employee)>5000
+				   begin
+				        print('minimum salary is greater than 5000')
+						break
+					end
+           end
+end
 
 
 
