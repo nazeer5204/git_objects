@@ -40,6 +40,33 @@ Syntax:
 set @variable+=10
 or
 set @variable=@variable+10
+
+Global variables:
+~~~~~~~~~~~~~~~~
+SQL Server provides a massive number of global variables, which are very effective to use in our regular Transact-SQL. 
+Global variables represent a special type of variable. The server always maintain the values of these variables. 
+All the global variables represent information specific to the server or a current user session. 
+
+Global variable names begin with a @@ prefix. You do not need to declare them, since the server constantly maintains them. 
+They are system-defined functions and you cannot declare them.
+
+select @@VERSION
+
+print @@version
+
+select @@ERROR
+
+select @@ROWCOUNT
+
+select @@CONNECTIONS
+
+select @@IDENTITY
+
+select @@SERVERNAME
+
+select @@SERVICENAME
+
+select @@TOTAL_ERRORS
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Begin..End:
@@ -700,7 +727,74 @@ begin
            end
 end
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+alter trigger trgbalance
+on transaction_master
+after insert,update
+as
+begin
+     declare @acid1 int,@txntype1 varchar(10),@txnamt1 money,@status1 varchar(20),@cbal1 money,@cnt1 int
+	 select @acid1=acid,@txntype1=txntype,@txnamt1=txnamt from inserted
 
+--check the status of the a/c
+      select @status1=status from account_master where acid=@acid1
+
+
+--check the no.of txns in current month
+      select @cnt1=count(*) from transaction_master where acid=@acid1 and datediff(mm,dot,getdate())=0
+      if (@status1='inoperative')
+	      begin
+		      print('the a/c is inoperative plz contact you near by branch')
+			  rollback
+          end
+	
+		
+	  else if (@cnt1>5)
+		    begin
+			     print 'you have crossed monthy transaction limits'
+				 update account_master set cbal=cbal+@txnamt1-50,uncbal=uncbal+@txnamt1-50 where @acid1=acid--penalty -50
+             end
+	
+
+         
+--cd
+--update the cbal,ubal
+
+       else
+	       begin--else begin
+
+	         if(@txntype1='cd')    
+	           begin
+			     update account_master set cbal=cbal+@txnamt1,uncbal=uncbal+@txnamt1 where acid=@acid1
+			    end
+
+                 
+--cw
+--update the cbal,ubal 
+               if(@txntype1='cw')
+			      begin
+				     select @cbal1=cbal from account_master where acid=@acid1
+				     if(@cbal1<@txnamt1)
+                       begin
+					     update account_master set cbal=cbal-@txnamt1,uncbal=uncbal-@txnamt1 where acid=@acid1
+					    end
+					  else
+					    begin 
+					      print('you have infsufficient funds for this transaction')
+					     end	
+			        end	 
+				
+                     
+--cqd                
+--update the cbal	
+                if(@txntype1='cqd')
+				   begin
+				      update account_master set uncbal=uncbal+@txnamt1 where acid=@acid1
+				   end
+
+                end--else end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
