@@ -131,6 +131,47 @@ else
  begin
      {sql statements or statement block}
  end
+
+
+
+declare @x int
+set @x=0
+if (@x<10)
+		  begin
+			   print('x is less than 10')
+	   
+		  end
+else
+		   
+          begin 
+		       print('x is greater than 10')
+		  end
+
+select * from account_master
+
+begin
+     declare @acid int=1001
+     if(select count(*) from account_master where acid=@acid)=0
+	    begin
+		     print('plz enter valid a/n no') 
+			 
+			 
+		end
+	 else
+	     begin
+		      select acid,name,cbal,uncbal,status from account_master where acid=@acid
+			  
+		 end
+end	
+
+if (@@ERROR=0)
+begin 
+     print('the above statement is successful')
+end
+else
+begin
+     print('the above statement is terminated')
+end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 While loop:
 ~~~~~~~~~~
@@ -174,6 +215,18 @@ while @x<10
 begin
      print('hello')
 	 set @x+=1
+end
+
+
+begin
+declare @y int=0
+while(@y<10)
+begin
+     print('hlo world')
+	 print @y
+	 set @y+=1
+end
+
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 use hr;
@@ -367,33 +420,29 @@ as
 
 begin
 
-     declare @cnt int
+declare @cnt int
 
-     select @cnt=count(*) from account_master where acid=@acid
+select @cnt=count(*) from account_master where acid=@acid
 
-	 if @cnt=0
+if @cnt=0
+  begin
 
-	        begin
+       print 'enter valid ac/no.pls check'
+       return 69
+   end
+else
+  begin
 
-	             print 'enter valid ac/no.pls check'
+       select @name=name,@cbal=cbal from account_master where acid=@acid
+       return 0
+  end
+end
 
-				 return 69
-
-	        end
-
-	  else
-
-	        begin
-
-                 select @name=name,@cbal=cbal from account_master where acid=@acid
-
-				 return 0
-
-	        end
-
-
-
-end  
+to call the spgetbalancename:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+declare @name1 varchar(20),@cbal1 money
+exec spgetbalancename 1,@name1 out,@cbal1 out
+select @name1,@cbal1  
 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -746,14 +795,14 @@ begin
 	      begin
 		      print('the a/c is inoperative plz contact you near by branch')
 			  rollback
-          end
+              end
 	
 		
-	  else if (@cnt1>5)
+      else if (@cnt1>5)
 		    begin
 			     print 'you have crossed monthy transaction limits'
-				 update account_master set cbal=cbal+@txnamt1-50,uncbal=uncbal+@txnamt1-50 where @acid1=acid--penalty -50
-             end
+			     update account_master set cbal=cbal+@txnamt1-50,uncbal=uncbal+@txnamt1-50 where @acid1=acid--penalty -50
+                    end
 	
 
          
@@ -764,38 +813,77 @@ begin
 	       begin--else begin
 
 	         if(@txntype1='cd')    
-	           begin
-			     update account_master set cbal=cbal+@txnamt1,uncbal=uncbal+@txnamt1 where acid=@acid1
-			    end
+	         begin
+		       update account_master set cbal=cbal+@txnamt1,uncbal=uncbal+@txnamt1 where acid=@acid1
+	         end
 
                  
 --cw
 --update the cbal,ubal 
                if(@txntype1='cw')
-			      begin
-				     select @cbal1=cbal from account_master where acid=@acid1
-				     if(@cbal1<@txnamt1)
-                       begin
-					     update account_master set cbal=cbal-@txnamt1,uncbal=uncbal-@txnamt1 where acid=@acid1
-					    end
-					  else
-					    begin 
-					      print('you have infsufficient funds for this transaction')
-					     end	
-			        end	 
+	       begin
+	              select @cbal1=cbal from account_master where acid=@acid1
+	              if(@cbal1<@txnamt1)
+                      begin
+                            update account_master set cbal=cbal-@txnamt1,uncbal=uncbal-@txnamt1 where acid=@acid1
+	              end  
+                      else
+	              begin 
+                            print('you have infsufficient funds for this transaction')
+	              end	
+	       end	 
 				
                      
 --cqd                
 --update the cbal	
                 if(@txntype1='cqd')
-				   begin
-				      update account_master set uncbal=uncbal+@txnamt1 where acid=@acid1
-				   end
+		begin
+		     update account_master set uncbal=uncbal+@txnamt1 where acid=@acid1
+	        end
 
                 end--else end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+declare @NAME VARCHAR(100)
+SET @NAME='ZAMEER'
 
+PRINT 'USER_NAME:'+@NAME+' SIR'
+
+DECLARE @CBAL MONEY
+SET @CBAL=10000
+
+PRINT 'BALANCE '+convert(varchar(100),@CBAL)
+
+
+DECLARE @Z INT
+SET @Z=10
+PRINT 'NUMBER: '+ CAST(@Z AS VARCHAR(100))
+
+
+
+DECLARE @Z INT
+SET @Z=10
+PRINT 'NUMBER: '+ CONVERT(VARCHAR(100),@Z)
+
+DECLARE @D DATETIME
+SET @D=GETDATE()
+PRINT 'DATE: '+CAST(@D AS VARCHAR(100))
+
+
+DECLARE @X DATETIME
+SET @X=GETDATE()
+
+SELECT CONVERT(VARCHAR,@X)
+
+DECLARE @Z DATETIME
+SET @Z=GETDATE()
+
+SELECT CONVERT(varchar,@Z,7)
+
+select year(getdate())
+select DATEPART(DD,GETDATE())
+
+		 
 
 
 
