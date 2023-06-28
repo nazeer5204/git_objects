@@ -325,7 +325,7 @@ Syntax:
 create procedur <pro name>
 (
        input ---to pass the data to sp
-       outpu----to return from sp
+       output----to return from sp
 )
 as 
 begin
@@ -882,6 +882,45 @@ SELECT CONVERT(varchar,@Z,7)
 
 select year(getdate())
 select DATEPART(DD,GETDATE())
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+alter procedure sploanstatement
+(        
+         @loan_amount money=100000,
+		 @roi tinyint=14,
+		 @tenureINyrs tinyint=2
+)
+as 
+begin
+		declare @intrest_amount money
+		set @intrest_amount=(@loan_amount*@roi*@tenureINyrs)/100
+
+		declare @total_amount money
+		set @total_amount=@loan_amount+@intrest_amount
+
+		declare @emi_amount money
+		set @emi_amount=@total_amount/(@tenureINyrs*12)
+
+		declare @loan_start_date datetime
+		set @loan_start_date=getdate()
+
+		print '---------------------------------------------------------------------------------------------'
+		print 's.no'+space(10)+'emi_due_date'+space(10)+'emi_amount'
+		print '---------------------------------------------------------------------------------------------'
+
+		declare @month int
+		set @month=1
+		while (@month<=@tenureINyrs*12)
+		begin
+		     print cast(@month as varchar(100))+space(10)+
+			       convert(varchar(100),dateadd(mm,@month,@loan_start_date),107)+space(10)+
+			       cast(@emi_amount as varchar(100))
+		
+			 set @month+=1
+        end
+		print'----------------------------------------------------------------------------------------------'
+		print space(12)+'grand total:' +space(17)+cast(@total_amount as varchar(100))
+		print'-----------------------------------------------------------------------------------------------'
+end
 
 		 
 
