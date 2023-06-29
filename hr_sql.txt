@@ -240,7 +240,48 @@ delete from users where rowid in
 (select rowid from (select user_id,user_name,email,rowid,row_number() over(partition by user_name order by user_id) as dup_count
  from users) where dup_count>1)
 
-                                              
+select t1.emp_id,t1.emp_name,t1.dept_name,t1.salary from employee t1
+join (select avg(salary)avgsal from employee) t2
+on t1.SALARY<t2.avgsal---emp salary less than the average salary using joins
+
+select emp_ID,emp_NAME,DEPT_NAME,SALARY from employee where  SALARY<(select avg(SALARY) from employee)---emp salary less than the average salary using subquery
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--find the department name having more employees
+
+select * from employee
+
+select dept_name,count(*) cnt from employee group by DEPT_NAME
+
+select * from
+(select dept_name,count(*)cnt from employee group by DEPT_NAME)k where cnt= 
+(select max(cnt) mazcnt from (select dept_name,count(*) cnt from employee group by DEPT_NAME)x)--using subquery
+
+select y.DEPT_NAME,z.mazcnt from(
+(select dept_name,count(*)cnt from employee group by DEPT_NAME))y
+join
+(select max(cnt)mazcnt from (select dept_name,count(*)cnt from employee group by DEPT_NAME)x)z--using join
+on y.cnt=z.mazcnt
+
+--cte 
+with t as 
+(select dept_name,count(*)cnt from employee group by DEPT_NAME)
+select * from t where cnt=(select max(cnt)mazcnt from t)--subquery
+
+with cte_cnt as
+(select dept_name,count(*) cnt from employee group by DEPT_NAME)
+select DEPT_NAME,x.mazcnt from cte_cnt
+join (select max(cnt)mazcnt from cte_cnt)x
+on cte_cnt.cnt=x.mazcnt--joins
+
+--temp tables
+select dept_name,count(*)cnt into #temp from employee group by DEPT_NAME
+
+select * from #temp
+
+select * from #temp where cnt=
+(
+select max(cnt) from #temp)                                             
                                                      
 
 
