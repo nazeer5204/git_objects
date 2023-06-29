@@ -284,6 +284,11 @@ select * from #temp where cnt=
 select max(cnt) from #temp)                                             
                                                      
 
+--top 3 branches based on highes count of employees
+
+select top 3 dept_name,count(*)cnt from employee group by DEPT_NAME order by cnt desc
+
+select top 3 * from #temp order by cnt desc
 
 
 
