@@ -916,14 +916,41 @@ begin
 			       cast(@emi_amount as varchar(100))
 		
 			 set @month+=1
-        end
+                end
 		print'----------------------------------------------------------------------------------------------'
 		print space(12)+'grand total:' +space(17)+cast(@total_amount as varchar(100))
 		print'-----------------------------------------------------------------------------------------------'
 end
 
 		 
-
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+alter trigger trg_audit_insert on employee_test
+after insert
+as 
+begin
+     declare @emp_id int
+	 declare @emp_name varchar(100)
+	 declare @emp_sal decimal(10,2)
+	 declare @audit_action varchar(100)
+	 set @audit_action='[inserted]'
+	 declare @audit_timestamp date
+	 declare @cnt int
+	 set @audit_timestamp=cast(getdate() as date)
+     select @emp_id=emp_id,@emp_name=emp_name,@emp_sal=emp_sal from inserted
+	 select @cnt=count(*) from Employee_Test where emp_name=@emp_name
+	 if (@cnt>=1)
+	   begin
+	        print 'row already exists'
+			rollback
+			
+	   end
+     else
+	   begin
+	        
+			insert into Employee_Test_Audit values(@emp_id,@emp_name,@emp_sal,@audit_action,@audit_timestamp)
+	   end
+	
+end
 
 
 
