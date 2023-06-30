@@ -448,6 +448,8 @@ select @name1,@cbal1
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Trigger:
 ~~~~~~~
+after trigger:
+~~~~~~~~~~~~
 ALTER trigger [dbo].[trg_updatebalance]
 on [dbo].[transaction_master]
 after insert,update,delete
@@ -508,6 +510,30 @@ else
 end--end of trigger
 
 GO
+
+instead of trigger:
+~~~~~~~~~~~~~~~~~~
+create trigger trg_high_transactions
+on transaction_master 
+instead of insert,update
+as 
+begin
+		declare @acid int
+		declare @txntype varchar(10)
+		declare @txnamt money
+		declare @dot date
+		set @dot=cast(getdate() as date)
+		select @acid=acid,@txntype=txntype,@txnamt=txnamt from inserted
+		
+		if(@txnamt>50000)
+		begin
+		     insert into high_txn_master values(@acid,@dot,@txntype,@txnamt)
+		end
+		else
+		begin
+		     insert into transaction_master values(@acid,@dot,@txntype,@txnamt)
+		end
+end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 alter
 
